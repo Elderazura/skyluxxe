@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
 
 import { brandImages } from "@/content/images";
 import { brand } from "@/content/brand";
-import { fadeInUp, staggerContainer } from "@/lib/animations";
+import { EASE_OUT_EXPO, fadeInUp, imageReveal, staggerContainer } from "@/lib/animations";
 
 const steps = [
   {
@@ -35,9 +36,90 @@ const steps = [
   },
 ] as const;
 
+/**
+ * Editorial interlude after step 03: a visual “breathing room” between Orchestrate and Anticipate.
+ * The lounge image grounds the abstract process in a real, discreet environment — where service
+ * becomes atmosphere. It is not decorative filler; it marks the shift from execution to intuition.
+ */
+function ExperienceInterlude() {
+  const blockRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: blockRef,
+    offset: ["start end", "end start"],
+  });
+
+  const imageY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? ["0%", "0%"] : ["6%", "-6%"]);
+
+  return (
+    <motion.div
+      ref={blockRef}
+      className="py-10 md:py-16"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-10%", amount: 0.15 }}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: { staggerChildren: 0.12, delayChildren: 0.05 },
+        },
+      }}
+    >
+      <motion.div
+        variants={fadeInUp}
+        className="mx-auto mb-8 max-w-2xl md:mb-10"
+      >
+        <p className="font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.2em]" style={{ color: brand.colors.roseGold }}>
+          Between orchestration and anticipation
+        </p>
+        <p className="mt-4 font-[family-name:var(--font-serif)] text-lg italic leading-relaxed text-[#F5F0EB]/90 md:text-xl">
+          This is the human layer — private lounges, unhurried arrivals, the unspoken choreography of
+          discretion. Logistics end here; presence begins.
+        </p>
+        <motion.div
+          className="mt-6 h-px max-w-[120px] origin-left"
+          style={{ backgroundColor: brand.colors.roseGold, opacity: 0.45 }}
+          initial={{ scaleX: 0 }}
+          whileInView={{ scaleX: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: EASE_OUT_EXPO, delay: 0.2 }}
+        />
+      </motion.div>
+
+      <motion.div
+        variants={imageReveal}
+        className="relative aspect-[16/9] w-full overflow-hidden rounded-sm md:aspect-[21/9]"
+      >
+        <motion.div className="absolute inset-0 h-[115%] w-full -top-[7.5%]" style={{ y: imageY }}>
+          <Image
+            src={brandImages.conciergeLounge}
+            alt="An intimate concierge lounge — where discreet service takes form"
+            fill
+            className="object-cover"
+            sizes="100vw"
+          />
+        </motion.div>
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(22,34,53,0.5) 0%, transparent 35%, transparent 65%, rgba(22,34,53,0.35) 100%)",
+          }}
+          aria-hidden
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export function Experience() {
   return (
-    <section className="overflow-hidden bg-[#162235] px-[var(--gutter-x)] py-[clamp(8rem,15vh,14rem)]">
+    <section
+      className="overflow-hidden bg-[#162235] px-[var(--gutter-x)] py-[clamp(8rem,15vh,14rem)]"
+      aria-label="The experience"
+    >
       <motion.div
         className="mx-auto max-w-[var(--container-max)]"
         initial="hidden"
@@ -53,7 +135,6 @@ export function Experience() {
                 index > 0 ? "border-t border-white/[0.06]" : ""
               }`}
             >
-              {/* Number */}
               <div className={`md:col-span-2 ${index % 2 === 1 ? "md:order-last md:text-right" : ""}`}>
                 <span
                   className="font-[family-name:var(--font-serif)] text-[clamp(3rem,5vw,4.5rem)] font-light italic leading-none"
@@ -63,7 +144,6 @@ export function Experience() {
                 </span>
               </div>
 
-              {/* Content */}
               <div className={`md:col-span-7 ${index % 2 === 1 ? "md:order-first" : ""}`}>
                 <h3 className="font-[family-name:var(--font-display)] text-[clamp(2rem,4vw,3rem)] leading-tight tracking-tight text-[#F5F0EB]">
                   {step.title}
@@ -74,20 +154,7 @@ export function Experience() {
               </div>
             </motion.div>
 
-            {/* Editorial image between steps 3 and 4 */}
-            {index === 2 && (
-              <motion.div variants={fadeInUp} className="py-8 md:py-12">
-                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-sm md:aspect-[21/9]">
-                  <Image
-                    src={brandImages.conciergeLounge}
-                    alt="An intimate concierge lounge"
-                    fill
-                    className="object-cover"
-                    sizes="100vw"
-                  />
-                </div>
-              </motion.div>
-            )}
+            {index === 2 ? <ExperienceInterlude /> : null}
           </div>
         ))}
       </motion.div>

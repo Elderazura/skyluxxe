@@ -27,6 +27,11 @@ export const brandImages = {
   conciergeLounge: "/images/brand/concierge-lounge.png",
 } as const;
 
+/** Web-optimized loop for backgrounds (H.264, ~1280px max). Source: `public/hero.mp4`. */
+export const videos = {
+  openingStatementBg: "/opening-statement-bg.mp4",
+} as const;
+
 export const lifestyleImages = {
   jetSunsetAerial: "/images/website/jet-sunset-aerial.png",
   jetTarmacAerial: "/images/website/jet-tarmac-aerial.png",

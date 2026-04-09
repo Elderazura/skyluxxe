@@ -22,6 +22,9 @@
 
 # misc
 .DS_Store
+
+# Large source video — use compressed `public/opening-statement-bg.mp4` in production
+/public/hero.mp4
 *.pem
 
 # debug
