@@ -62,6 +62,19 @@ export const staggerContainer: Variants = {
   },
 };
 
+/** Slightly looser stagger for mobile-forward sections (headline → sub → CTA). */
+export const staggerContainerLoose: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.16,
+      delayChildren: 0.08,
+      ease: EASE_IN_OUT_CUBIC,
+    },
+  },
+};
+
 export const maskReveal: Variants = {
   hidden: {
     clipPath: "inset(100% 0 0 0)",

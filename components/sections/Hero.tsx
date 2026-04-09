@@ -63,15 +63,17 @@ export function Hero() {
       className="relative flex min-h-[100svh] min-h-[100vh] flex-col justify-end overflow-hidden bg-[#0D1B2A]"
       aria-label="Skyluxxe concierge travel"
     >
-      <div className="absolute inset-0 z-0">
-        <Image
-          src={lifestyleImages.jetSunsetAerial}
-          alt="Private jet soaring over a sunset coastline"
-          fill
-          priority
-          className="object-cover object-center"
-          sizes="100vw"
-        />
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-[-6%] h-[112%] w-[112%] sk-m-ken-burns">
+          <Image
+            src={lifestyleImages.jetSunsetAerial}
+            alt="Private jet soaring over a sunset coastline"
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+        </div>
         <div
           className="absolute inset-0"
           style={{
@@ -127,7 +129,7 @@ export function Hero() {
       </div>
 
       <div
-        className="pointer-events-none absolute inset-x-[var(--gutter-x)] bottom-[clamp(1.25rem,4vh,2.75rem)] z-[1] h-px opacity-30"
+        className="pointer-events-none absolute inset-x-[var(--gutter-x)] bottom-[clamp(1.25rem,4vh,2.75rem)] z-[1] h-px sk-m-hairline-pulse md:opacity-30"
         style={{
           backgroundImage: `linear-gradient(90deg, transparent 0%, ${brand.colors.roseGold} 40%, ${brand.colors.roseGold} 60%, transparent 100%)`,
         }}

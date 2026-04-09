@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { useReducedMotion } from "framer-motion";
-import { MaskedText } from "@/components/ui/MaskedText";
+import { motion, useReducedMotion } from "framer-motion";
 import { brandImages, videos } from "@/content/images";
+import { brand } from "@/content/brand";
 
 const MonogramScene = dynamic(
   () => import("@/components/ui/MonogramScene").then((mod) => ({ default: mod.MonogramScene })),
@@ -58,6 +58,10 @@ export function OpeningStatement() {
               "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 0%, rgba(13,27,42,0.5) 100%)",
           }}
         />
+        {/* Mobile: slow rose-gold wash across the frame */}
+        {!reduceMotion ? (
+          <div className="sk-m-shimmer-track md:hidden" aria-hidden />
+        ) : null}
       </div>
 
       {/* Floating 3D monogram — whisper-light, behind copy */}
@@ -74,16 +78,30 @@ export function OpeningStatement() {
         />
       </div>
 
-      {/* Text content */}
+      {/* Text content — extra motion on small screens */}
       <div className="relative z-10 mx-auto flex w-full max-w-[900px] flex-col items-stretch text-center">
-        <MaskedText>
-          <p
+        <div className="relative px-2 md:px-0">
+          <div
+            className="pointer-events-none absolute -left-0.5 top-1/2 block h-20 w-px -translate-y-1/2 sk-m-edge-accent md:hidden"
+            style={{ backgroundColor: brand.colors.roseGold, opacity: 0.4 }}
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute -right-0.5 top-1/2 block h-20 w-px -translate-y-1/2 sk-m-edge-accent md:hidden"
+            style={{ backgroundColor: brand.colors.roseGold, opacity: 0.4 }}
+            aria-hidden
+          />
+          <motion.p
             id="opening-statement-heading"
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-12%", amount: 0.3 }}
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
             className="font-[family-name:var(--font-serif)] text-[clamp(1.75rem,4.5vw,3.5rem)] font-light italic leading-[1.3] text-[color:var(--color-off-white)] [text-shadow:0_2px_40px_rgba(13,27,42,0.45)]"
           >
             We do not arrange travel. We define how it is experienced.
-          </p>
-        </MaskedText>
+          </motion.p>
+        </div>
       </div>
     </section>
   );

@@ -38,12 +38,12 @@ export function ImageBreak({
         className="absolute inset-0"
         style={{ y: prefersReducedMotion ? 0 : y }}
       >
-        <div className="absolute inset-[-8%] h-[116%] w-full">
+        <div className="absolute inset-[-8%] h-[116%] w-full overflow-hidden">
           <Image
             src={src}
             alt={alt}
             fill
-            className="object-cover"
+            className="object-cover sk-m-ken-burns"
             sizes="100vw"
           />
         </div>

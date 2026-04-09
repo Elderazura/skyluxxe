@@ -70,12 +70,16 @@ export function MonogramScroll() {
         </motion.p>
 
         <div
-          className="pointer-events-none absolute top-1/2 left-1/2 -z-0 h-[min(90vw,450px)] w-[min(90vw,450px)] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[120px] md:h-[550px] md:w-[550px]"
-          style={{
-            background: `radial-gradient(circle, ${brand.colors.roseGold}18, transparent 70%)`,
-          }}
+          className="pointer-events-none absolute top-1/2 left-1/2 -z-0 -translate-x-1/2 -translate-y-1/2"
           aria-hidden="true"
-        />
+        >
+          <div
+            className="h-[min(90vw,450px)] w-[min(90vw,450px)] rounded-full blur-[120px] sk-m-glow-breathe md:h-[550px] md:w-[550px]"
+            style={{
+              background: `radial-gradient(circle, ${brand.colors.roseGold}18, transparent 70%)`,
+            }}
+          />
+        </div>
       </div>
     </section>
   );

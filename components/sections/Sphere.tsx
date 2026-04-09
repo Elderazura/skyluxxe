@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { sphereImages } from "@/content/images";
 import { brand } from "@/content/brand";
-import { fadeInUp, staggerContainer } from "@/lib/animations";
+import { fadeInUp, staggerContainer, staggerContainerLoose } from "@/lib/animations";
 
 const categories = [
   {
@@ -45,16 +45,22 @@ export function Sphere() {
       }}
     >
       <div className="mx-auto max-w-[var(--container-max)]">
-        <p className="mb-12 font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.2em] text-[#8A9AB5] md:mb-16">
+        <motion.p
+          className="mb-12 font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.2em] text-[#8A9AB5] md:mb-16"
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-5%" }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        >
           The Sphere
-        </p>
+        </motion.p>
 
         <motion.div
           className="grid grid-cols-1 gap-4 md:grid-cols-12 md:grid-rows-2 md:gap-4"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-8%", amount: 0.15 }}
-          variants={staggerContainer}
+          viewport={{ once: true, margin: "-8%", amount: 0.12 }}
+          variants={staggerContainerLoose}
         >
           {categories.map((cat, index) => (
             <SphereCell
@@ -103,13 +109,15 @@ function SphereCell({
         className="group relative flex h-full min-h-[18rem] flex-col justify-end overflow-hidden"
       >
         {src && (
-          <Image
-            src={src}
-            alt=""
-            fill
-            className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
-            sizes="(max-width: 767px) 100vw, (max-width: 1200px) 50vw, 40vw"
-          />
+          <div className="absolute inset-0 overflow-hidden">
+            <Image
+              src={src}
+              alt=""
+              fill
+              className="object-cover sk-m-ken-burns transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
+              sizes="(max-width: 767px) 100vw, (max-width: 1200px) 50vw, 40vw"
+            />
+          </div>
         )}
 
         <div

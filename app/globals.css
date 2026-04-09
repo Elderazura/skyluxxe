@@ -291,6 +291,115 @@ body {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Mobile ambient motion — transform/opacity only; max-width + no reduced    */
+/* -------------------------------------------------------------------------- */
+
+@keyframes sk-m-ken-burns {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.08) translate3d(-1.2%, -0.6%, 0);
+  }
+}
+
+@keyframes sk-m-hairline-breathe {
+  0%,
+  100% {
+    opacity: 0.22;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes sk-m-edge-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+@keyframes sk-m-shimmer-x {
+  0% {
+    transform: translateX(-30%);
+  }
+  100% {
+    transform: translateX(30%);
+  }
+}
+
+@keyframes sk-m-float-y {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .sk-m-ken-burns {
+    animation: sk-m-ken-burns 22s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  .sk-m-hairline-pulse {
+    animation: sk-m-hairline-breathe 6s var(--ease-in-out-cubic) infinite;
+  }
+
+  .sk-m-edge-accent {
+    animation: sk-m-edge-glow 5s var(--ease-in-out-cubic) infinite;
+  }
+
+  .sk-m-shimmer-track {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .sk-m-shimmer-track::after {
+    content: "";
+    position: absolute;
+    inset: -50% -100%;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      color-mix(in srgb, var(--color-rose-gold) 22%, transparent) 50%,
+      transparent 65%
+    );
+    animation: sk-m-shimmer-x 7s linear infinite;
+    opacity: 0.35;
+  }
+
+  .sk-m-label-float {
+    animation: sk-m-float-y 8s var(--ease-in-out-cubic) infinite;
+  }
+
+  @keyframes sk-m-glow-breathe {
+    0%,
+    100% {
+      opacity: 0.75;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.07);
+    }
+  }
+
+  .sk-m-glow-breathe {
+    animation: sk-m-glow-breathe 10s var(--ease-in-out-cubic) infinite;
+    transform-origin: center center;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /* Reduced motion                                                              */
 /* -------------------------------------------------------------------------- */
 

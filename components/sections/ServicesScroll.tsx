@@ -2,12 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 import { brand } from "@/content/brand";
 import { serviceImages } from "@/content/images";
 import { services } from "@/content/services";
-import { DURATION_FAST, EASE_OUT_EXPO } from "@/lib/animations";
+import { DURATION_FAST, EASE_OUT_EXPO, fadeInUp, staggerContainerLoose } from "@/lib/animations";
 import { registerGSAP } from "@/lib/gsap";
 
 const MOBILE_MAX = 767;
@@ -178,22 +179,29 @@ export function ServicesScroll() {
       aria-label="Services"
     >
       {isMobile ? (
-        <div className="flex flex-col">
+        <motion.div
+          className="flex flex-col"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-8%", amount: 0.08 }}
+          variants={staggerContainerLoose}
+        >
           {services.map((service) => {
             const imgSrc = serviceImages[service.slug];
             return (
-              <div
+              <motion.div
                 key={service.id}
+                variants={fadeInUp}
                 className="relative overflow-hidden"
                 style={{ backgroundColor: brand.colors.navy }}
               >
                 {imgSrc && (
-                  <div className="relative aspect-[16/9] w-full">
+                  <div className="relative aspect-[16/9] w-full overflow-hidden">
                     <Image
                       src={imgSrc}
                       alt={service.name}
                       fill
-                      className="object-cover"
+                      className="object-cover sk-m-ken-burns"
                       sizes="100vw"
                     />
                     <div
@@ -241,10 +249,10 @@ export function ServicesScroll() {
                     </span>
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       ) : (
         <>
           <div
