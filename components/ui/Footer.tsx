@@ -30,9 +30,9 @@ export function Footer() {
             <Image
               src={logos.monogramRoseGold}
               alt="Skyluxxe"
-              width={48}
-              height={54}
-              className="h-12 w-auto object-contain"
+              width={64}
+              height={71}
+              className="h-14 w-auto object-contain md:h-16"
             />
             <p className="mt-4 font-[family-name:var(--font-serif)] text-base italic text-[#8A9AB5]">
               Concierge Travel

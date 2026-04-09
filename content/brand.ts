@@ -25,6 +25,14 @@ export const brand = {
     addressLine1: "Abu Dhabi, UAE",
     addressLine2: "By appointment only",
   },
+  office: {
+    name: "Skyluxxe Concierge Travel",
+    addressLines: ["Abu Dhabi, United Arab Emirates", "By appointment only"] as const,
+    hoursLine: "Monday–Friday · 09:00–18:00 GST (by arrangement)",
+    /** Google Maps embed (query-centred). */
+    mapEmbedUrl:
+      "https://maps.google.com/maps?q=24.4539,54.3773&z=11&hl=en&output=embed",
+  },
 } as const;
 
 export type BrandColors = typeof brand.colors;

@@ -8,6 +8,8 @@ export type Service = {
   shortDescription: string;
   longDescription: string;
   category: ServiceCategory;
+  /** Short CTA label on the services index (links to enquiry). */
+  listCta: string;
 };
 
 export const services: readonly Service[] = [
@@ -21,6 +23,7 @@ export const services: readonly Service[] = [
     longDescription:
       "Skyluxxe curates private aviation with the same care as a signature residence: aircraft selection, routing, and ownership structures reviewed with quiet rigor. Your team receives clear options, discreet coordination, and continuity across seasons. Whether you fly occasionally or maintain a fleet philosophy, we protect time, privacy, and predictability so the journey remains as composed as the arrival.",
     category: "air",
+    listCta: "Arrange a call back",
   },
   {
     id: 2,
@@ -32,6 +35,7 @@ export const services: readonly Service[] = [
     longDescription:
       "Airports should not interrupt your rhythm. We choreograph greeters, lounges, immigration support, and luggage so you move through terminals with confidence. Transit is planned for contingency: delays, terminal changes, and last-minute reroutes are absorbed before they reach you. The experience is unhurried, attentive, and attuned to families, principals, and security-conscious travel alike.",
     category: "air",
+    listCta: "Request airport assistance",
   },
   {
     id: 3,
@@ -43,6 +47,7 @@ export const services: readonly Service[] = [
     longDescription:
       "Charter should feel like an extension of your office, not a gamble. We source aircraft against your priorities—cabin layout, catering sensitivities, and ground support—then hold the operation to a standard you can feel at wheels-up. Quotes are distilled to what matters; changes are managed with poise. You receive clarity, not noise, wherever you need to be.",
     category: "air",
+    listCta: "Book your charter",
   },
   {
     id: 4,
@@ -54,6 +59,7 @@ export const services: readonly Service[] = [
     longDescription:
       "A yacht charter is hospitality set against horizon and tide. We select yachts and captains who understand discretion, service rhythm, and safety without theatrics. Provisioning, shore experiences, and embarkation are orchestrated to your pace. Whether you seek solitude, celebration, or a working retreat at anchor, the voyage remains composed, warm, and entirely yours.",
     category: "lifestyle",
+    listCta: "Plan a voyage",
   },
   {
     id: 5,
@@ -65,6 +71,7 @@ export const services: readonly Service[] = [
     longDescription:
       "Where you stay defines how you recover and how you host. We place you in residences and hotels that honor your expectations: space, silence, culinary nuance, and staff who anticipate without hovering. Benefits and flexibility are negotiated with taste; special requests are handled before you ask. The result is a stay that feels inevitable, grounded in warmth and exacting taste.",
     category: "stay",
+    listCta: "Reserve a stay",
   },
   {
     id: 6,
@@ -76,6 +83,7 @@ export const services: readonly Service[] = [
     longDescription:
       "The right room at the right moment is both privilege and preparation. We secure invitations and hospitality packages with discretion, then support travel, security touchpoints, and guest protocols as needed. You arrive informed, appropriately introduced, and free to focus on the experience rather than the machinery behind it.",
     category: "lifestyle",
+    listCta: "Request access",
   },
   {
     id: 7,
@@ -87,6 +95,7 @@ export const services: readonly Service[] = [
     longDescription:
       "Protection should feel like confidence, not performance. We collaborate with vetted close-protection partners to weave security into itineraries without overshadowing the journey. Advance work, vehicle protocols, and contingency routes are handled with restraint. Families and teams receive clarity; principals retain autonomy within a carefully managed perimeter.",
     category: "lifestyle",
+    listCta: "Discuss confidential travel",
   },
   {
     id: 8,
@@ -98,6 +107,7 @@ export const services: readonly Service[] = [
     longDescription:
       "An island becomes a sanctuary when logistics vanish. We source exclusive-use properties and coordinate aviation, marine transfer, provisioning, and household staff to your standard. Days unfold without compromise: quiet beaches, curated meals, and the rare luxury of boundaries you control. We remain available, invisible, and attentive to the details that preserve the mood.",
     category: "stay",
+    listCta: "Enquire about a retreat",
   },
   {
     id: 9,
@@ -109,6 +119,7 @@ export const services: readonly Service[] = [
     longDescription:
       "Ground travel is where first impressions repeat themselves. We assign vehicles and chauffeurs matched to itinerary, party size, and security posture—always clean, punctual, and discreet. Traffic, alternate entrances, and meet locations are considered in advance. Whether a single transfer or a multi-day road program, the experience remains smooth, quiet, and assured.",
     category: "land",
+    listCta: "Book ground transport",
   },
   {
     id: 10,
@@ -120,6 +131,7 @@ export const services: readonly Service[] = [
     longDescription:
       "A journey should feel authored, not assembled. We listen for purpose—celebration, reconnection, legacy travel—then design routes, pacing, and moments that honor it. Specialists refine dining, culture, and private access; contingencies are embedded without cluttering the plan. You receive a single itinerary, human support, and the sense that nothing was left to chance.",
     category: "lifestyle",
+    listCta: "Design an itinerary",
   },
   {
     id: 11,
@@ -131,6 +143,7 @@ export const services: readonly Service[] = [
     longDescription:
       "Family offices move people, assets, and reputations in parallel. We provide a dedicated travel architecture: consolidated planning, preferred partners, and institutional memory of preferences and sensitivities. From education seasons to summit weeks, movements align with governance and privacy. The service is steady, warm, and precise—so principals and households can travel with confidence.",
     category: "lifestyle",
+    listCta: "Speak with our desk",
   },
 ];
 

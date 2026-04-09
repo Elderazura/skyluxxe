@@ -2,12 +2,13 @@
 
 import { useCallback, useId, useState, type FormEvent } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 import { DiamondMarker } from "@/components/ui/DiamondMarker";
 import { HairlineRule } from "@/components/ui/HairlineRule";
 import { MaskedText } from "@/components/ui/MaskedText";
 import { brand } from "@/content/brand";
-import { lifestyleImages } from "@/content/images";
+import { lifestyleImages, brandImages, logos } from "@/content/images";
 
 const ENQUIRY_TYPES = [
   "Private Aviation",
@@ -84,9 +85,20 @@ export function EnquiryPageContent() {
           />
         </div>
 
-        {/* Right: form */}
+        {/* Right: office, map, banners, form */}
         <div className="flex flex-col justify-center px-[var(--gutter-x)] py-16 md:col-span-7 md:px-16 md:py-20 lg:col-span-7 lg:px-24">
           <header className="max-w-[560px]">
+            <Link href="/" className="mb-8 inline-block md:mb-10">
+              <Image
+                src={logos.monogramRoseGold}
+                alt="Skyluxxe"
+                width={112}
+                height={124}
+                className="h-[4.5rem] w-auto object-contain sm:h-20 md:h-24"
+                priority
+              />
+            </Link>
+
             <div className="mb-8 flex items-center gap-3">
               <DiamondMarker size="md" />
             </div>
@@ -105,6 +117,61 @@ export function EnquiryPageContent() {
               <HairlineRule accent="gold" />
             </div>
           </header>
+
+          <div className="mt-12 grid max-w-[560px] grid-cols-1 gap-10 md:gap-12">
+            <section aria-labelledby={`${formId}-office`}>
+              <h2
+                id={`${formId}-office`}
+                className="font-[family-name:var(--font-body)] text-xs font-light uppercase tracking-[0.14em] text-muted-blue"
+              >
+                Concierge desk
+              </h2>
+              <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
+                <div className="space-y-4 font-[family-name:var(--font-body)] text-base font-light leading-relaxed text-off-white/90">
+                  <p className="font-[family-name:var(--font-display)] text-xl text-off-white">
+                    {brand.office.name}
+                  </p>
+                  {brand.office.addressLines.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                  <p>
+                    <a href={`tel:${brand.contact.phone.replace(/\s/g, "")}`} className="text-[#DFA293] transition-opacity hover:opacity-85">
+                      {brand.contact.phone}
+                    </a>
+                  </p>
+                  <p>
+                    <a href={`mailto:${brand.contact.email}`} className="text-[#DFA293] transition-opacity hover:opacity-85">
+                      {brand.contact.email}
+                    </a>
+                  </p>
+                  <p className="text-sm text-muted-blue">{brand.office.hoursLine}</p>
+                </div>
+                <div className="min-h-[200px] overflow-hidden rounded-sm border border-white/[0.08] bg-[#162235]">
+                  <iframe
+                    title="Skyluxxe — Abu Dhabi"
+                    src={brand.office.mapEmbedUrl}
+                    className="h-[220px] w-full border-0 md:h-full md:min-h-[240px]"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              </div>
+            </section>
+
+            <div className="relative aspect-[21/9] w-full overflow-hidden rounded-sm">
+              <Image
+                src={lifestyleImages.jetStairsTarmac}
+                alt="Aircraft stairs — seamless ground-to-air handoffs."
+                fill
+                className="object-cover"
+                sizes="(max-width: 767px) 100vw, 55vw"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-[#0D1B2A]/80 to-transparent"
+                aria-hidden
+              />
+            </div>
+          </div>
 
           <div className="mt-12 max-w-[560px]">
             {submitted ? (
@@ -244,6 +311,32 @@ export function EnquiryPageContent() {
                 </p>
               </form>
             )}
+          </div>
+
+          <div className="relative mt-16 aspect-[16/7] w-full max-w-[560px] overflow-hidden rounded-sm md:mt-20">
+            <Image
+              src={brandImages.leatherJournal}
+              alt="Leather journal — editorial calm and continuity."
+              fill
+              className="object-cover"
+              sizes="(max-width: 767px) 100vw, 40vw"
+            />
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/90 via-[#0D1B2A]/35 to-transparent"
+              aria-hidden
+            />
+            <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
+              <p className="font-[family-name:var(--font-display)] text-xl text-off-white md:text-2xl">
+                Prefer context before you write?
+              </p>
+              <Link
+                href="/journal"
+                className="mt-3 inline-flex items-center gap-2 font-[family-name:var(--font-serif)] text-sm italic text-[#DFA293] transition-opacity hover:opacity-85"
+              >
+                Read the Journal
+                <span aria-hidden>&rarr;</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
-import { MaskedText } from "@/components/ui/MaskedText";
+import { GlimpseRail } from "@/components/sections/GlimpseRail";
+import { InlineCta } from "@/components/sections/InlineCta";
+import { ReachCoverageGlobe } from "@/components/sections/ReachCoverageGlobe";
 import { ReachRegions, type ReachRegion } from "@/components/sections/ReachRegions";
 import { ReachStatement } from "@/components/sections/ReachStatement";
+import { MaskedText } from "@/components/ui/MaskedText";
 import { brand } from "@/content/brand";
+import { crossLinkExplore } from "@/content/crossLinks";
 import { lifestyleImages, brandImages } from "@/content/images";
 
 export const metadata: Metadata = {
@@ -85,6 +90,60 @@ export default function ReachPage() {
         </div>
       </header>
 
+      {/* Coverage — globe + narrative */}
+      <section
+        className="px-[var(--gutter-x)] pb-6 pt-16 md:pb-10 md:pt-24"
+        style={{ backgroundColor: brand.colors.navy }}
+        aria-labelledby="coverage-heading"
+      >
+        <div className="mx-auto max-w-[var(--container-max)]">
+          <p
+            className="font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.2em]"
+            style={{ color: brand.colors.mutedBlue }}
+          >
+            Coverage
+          </p>
+          <h2
+            id="coverage-heading"
+            className="mt-4 max-w-3xl font-[family-name:var(--font-display)] text-3xl tracking-tight md:text-[2.75rem]"
+            style={{ color: brand.colors.offWhite }}
+          >
+            One desk. Many regions.
+          </h2>
+          <p
+            className="mt-6 max-w-2xl font-[family-name:var(--font-body)] text-base font-light leading-relaxed md:text-lg"
+            style={{ color: brand.colors.mutedBlue }}
+          >
+            Abu Dhabi is our home — the axis from which we coordinate partners, aircraft, yachts,
+            residences, and ground teams. The globe below sketches principal touchpoints; your
+            programme may extend wherever your calendar demands.
+          </p>
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
+            <Link
+              href="/enquiry"
+              className="inline-flex min-h-[44px] items-center justify-center border border-[#DFA293] px-8 py-3 font-[family-name:var(--font-body)] text-[13px] font-normal uppercase tracking-[0.14em] text-[#FAF7F4] transition-colors duration-300 hover:bg-[#DFA293] hover:text-[#0D1B2A]"
+            >
+              Start a conversation
+            </Link>
+            <Link
+              href="/services"
+              className="inline-flex min-h-[44px] items-center justify-center px-2 font-[family-name:var(--font-serif)] text-base italic text-[#DFA293] underline-offset-4 transition-opacity hover:opacity-85"
+            >
+              View all services
+            </Link>
+            <Link
+              href="/about"
+              className="inline-flex min-h-[44px] items-center justify-center px-2 font-[family-name:var(--font-serif)] text-base italic text-[#8A9AB5] underline-offset-4 transition-opacity hover:text-[#DFA293]"
+            >
+              Our story
+            </Link>
+          </div>
+        </div>
+        <div className="mx-auto mt-14 max-w-[min(100%,1100px)] md:mt-16">
+          <ReachCoverageGlobe />
+        </div>
+      </section>
+
       {/* Regions */}
       <section
         className="px-[var(--gutter-x)] py-24 md:py-32"
@@ -100,6 +159,20 @@ export default function ReachPage() {
       </section>
 
       <ReachStatement />
+
+      <GlimpseRail
+        kicker="Discover"
+        heading="Continue exploring"
+        items={crossLinkExplore.filter((item) => item.href !== "/reach")}
+        background="deep"
+      />
+
+      <InlineCta
+        heading="Where will you go next?"
+        subtext="Share timing, party size, and tone — we build the architecture around you."
+        href="/enquiry"
+        label="Make an enquiry"
+      />
     </article>
   );
 }

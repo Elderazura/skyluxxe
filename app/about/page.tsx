@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { AboutValuesList } from "@/components/sections/AboutValuesList";
+import { GlimpseRail } from "@/components/sections/GlimpseRail";
 import { InlineCta } from "@/components/sections/InlineCta";
 import { StoryClosingCta } from "@/components/sections/StoryClosingCta";
 import { HairlineRule } from "@/components/ui/HairlineRule";
@@ -8,6 +9,7 @@ import { MaskedText } from "@/components/ui/MaskedText";
 import { RevealImage } from "@/components/ui/RevealImage";
 import { ScrollStats, type ScrollStatItem } from "@/components/ui/ScrollStats";
 import { brand } from "@/content/brand";
+import { crossLinkExplore } from "@/content/crossLinks";
 import { brandImages } from "@/content/images";
 
 export const metadata: Metadata = {
@@ -230,6 +232,43 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
+
+        <div className="mx-auto mt-16 max-w-[var(--container-max)] md:mt-20">
+          <RevealImage
+            src={brandImages.privateJetTarmac}
+            alt="Aircraft on the tarmac — precision, timing, and quiet confidence."
+            width={1600}
+            height={900}
+            responsive
+            parallax
+          />
+        </div>
+
+        <div className="mx-auto mt-16 max-w-[var(--container-max)] md:mt-20">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-5">
+            <RevealImage
+              src={brandImages.membershipCard}
+              alt="Membership and credentials — relationship, not transaction."
+              width={640}
+              height={800}
+              responsive
+            />
+            <RevealImage
+              src={brandImages.travelBag}
+              alt="Travel bag and personal effects — the private choreography of departure."
+              width={640}
+              height={800}
+              responsive
+            />
+            <RevealImage
+              src={brandImages.conciergeLounge}
+              alt="Concierge lounge — composed space before the next movement."
+              width={640}
+              height={800}
+              responsive
+            />
+          </div>
+        </div>
       </section>
 
       {/* Philosophy — navy */}
@@ -400,6 +439,13 @@ export default function AboutPage() {
           <ScrollStats items={STORY_STATS} />
         </div>
       </section>
+
+      <GlimpseRail
+        kicker="Discover"
+        heading="More from Skyluxxe"
+        items={crossLinkExplore.filter((item) => item.href !== "/about")}
+        background="ivory"
+      />
 
       <InlineCta
         heading="Start the conversation."

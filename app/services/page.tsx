@@ -6,11 +6,14 @@ import { HairlineRule } from "@/components/ui/HairlineRule";
 import { InlineCta } from "@/components/sections/InlineCta";
 import { MaskedText } from "@/components/ui/MaskedText";
 import { RevealImage } from "@/components/ui/RevealImage";
+import { GlimpseRail } from "@/components/sections/GlimpseRail";
+import { ServicesShowcaseBanners } from "@/components/sections/ServicesShowcaseBanners";
 import {
   services,
   serviceOverviewAnchorId,
 } from "@/content/services";
 import { brand } from "@/content/brand";
+import { crossLinkExplore } from "@/content/crossLinks";
 import { serviceImages } from "@/content/images";
 
 export const metadata: Metadata = {
@@ -129,6 +132,27 @@ export default function ServicesPage() {
                           >
                             {service.shortDescription}
                           </p>
+                          <p className="pt-6">
+                            <Link
+                              href="/enquiry"
+                              className="group inline-flex items-center gap-2 font-[family-name:var(--font-serif)] text-base italic transition-opacity duration-300 hover:opacity-85"
+                              style={{ color: brand.colors.roseGold }}
+                            >
+                              <span className="relative pb-0.5">
+                                {service.listCta}
+                                <span
+                                  className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-[#DFA293] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100"
+                                  aria-hidden
+                                />
+                              </span>
+                              <span
+                                className="inline-block text-sm transition-transform duration-300 group-hover:translate-x-0.5"
+                                aria-hidden
+                              >
+                                &rarr;
+                              </span>
+                            </Link>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -158,6 +182,15 @@ export default function ServicesPage() {
           })}
         </ol>
       </section>
+
+      <ServicesShowcaseBanners />
+
+      <GlimpseRail
+        kicker="Explore"
+        heading="Elsewhere on Skyluxxe"
+        items={crossLinkExplore}
+        background="ivory"
+      />
 
       <InlineCta
         heading="Tell us what you need."
