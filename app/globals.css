@@ -1,26 +1,320 @@
 @import "tailwindcss";
 
+/* -------------------------------------------------------------------------- */
+/* Skyluxxe — design tokens (dark-first, ultra-luxury concierge)               */
+/* -------------------------------------------------------------------------- */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand */
+  --color-midnight-aviation-navy: #0d1b2a;
+  --color-deep-navy: #162235;
+  --color-rich-navy: #2a2d4e;
+  --color-rose-gold: #dfa293;
+  --color-gold: #c9a96e;
+  --color-off-white: #f5f0eb;
+  --color-ivory-cream: #faf7f4;
+  --color-pure-white: #ffffff;
+  --color-near-black: #1a1a1a;
+  --color-muted-blue: #8a9ab5;
+
+  /* Layout */
+  --container-max: 1440px;
+  --gutter-x: clamp(1.5rem, 8vw, 7.5rem);
+  --section-y-sm: clamp(5rem, 10vh, 10rem);
+  --section-y-md: clamp(6rem, 12vh, 12.5rem);
+  --section-y-lg: clamp(7rem, 15vh, 15rem);
+
+  /* Type — modular scale (ratio 1.333) from 16px base */
+  --type-base: 1rem;
+  --type--1: 0.75rem;
+  --type-0: 1rem;
+  --type-1: 1.333rem;
+  --type-2: 1.777rem;
+  --type-3: 2.369rem;
+  --type-4: 3.157rem;
+  --type-5: 4.209rem;
+  --type-6: 5.61rem;
+
+  /* Motion */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-reveal: 1000ms;
+  --duration-slow: 1200ms;
+  --duration-luxury: 1400ms;
+  --duration-breathe: 4000ms;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Colors → Tailwind: bg-midnight-aviation-navy, text-rose-gold, etc. */
+  --color-midnight-aviation-navy: #0d1b2a;
+  --color-deep-navy: #162235;
+  --color-rich-navy: #2a2d4e;
+  --color-rose-gold: #dfa293;
+  --color-gold: #c9a96e;
+  --color-off-white: #f5f0eb;
+  --color-ivory-cream: #faf7f4;
+  --color-pure-white: #ffffff;
+  --color-near-black: #1a1a1a;
+  --color-muted-blue: #8a9ab5;
+
+  /* Fonts — stacks overridden on <html> by next/font localFont variable classes */
+  --font-display: "Italiana", Georgia, "Times New Roman", serif;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Spacing extensions */
+  --spacing-gutter: clamp(1.5rem, 8vw, 7.5rem);
+  --spacing-section-sm: clamp(5rem, 10vh, 10rem);
+  --spacing-section-md: clamp(6rem, 12vh, 12.5rem);
+  --spacing-section-lg: clamp(7rem, 15vh, 15rem);
+  --spacing-container: 1440px;
+
+  /* Letter-spacing */
+  --tracking-refined: 0.08em;
+  --tracking-luxury: 0.12em;
+  --tracking-caps: 0.18em;
+  --tracking-ultra: 0.22em;
+
+  /* Modular type scale → text-* utilities */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: 1.333rem;
+  --text-xl: 1.777rem;
+  --text-2xl: 2.369rem;
+  --text-3xl: 3.157rem;
+  --text-4xl: 4.209rem;
+  --text-5xl: 5.61rem;
+
+  /* Easing & duration for transitions / motion utilities */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-reveal: 1000ms;
+  --duration-slow: 1200ms;
+  --duration-luxury: 1400ms;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* -------------------------------------------------------------------------- */
+/* Base                                                                        */
+/* -------------------------------------------------------------------------- */
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-midnight-aviation-navy);
+  color: var(--color-off-white);
+  font-family: var(--font-body);
+  font-size: var(--type-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection — rose gold */
+::selection {
+  background-color: color-mix(in srgb, var(--color-rose-gold) 40%, transparent);
+  color: var(--color-ivory-cream);
+}
+
+/* Focus visible — rose gold ring */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-rose-gold);
+  outline-offset: 3px;
+}
+
+/* Skip link */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background-color: var(--color-midnight-aviation-navy);
+  color: var(--color-ivory-cream);
+  border: 1px solid var(--color-rose-gold);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  letter-spacing: var(--tracking-refined);
+  text-decoration: none;
+  transition:
+    transform var(--duration-reveal) var(--ease-out-expo),
+    opacity var(--duration-reveal) var(--ease-out-expo);
+}
+
+.skip-to-content:focus {
+  left: var(--gutter-x);
+  top: 1rem;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-midnight-aviation-navy), 0 0 0 4px var(--color-rose-gold);
+}
+
+.skip-to-content:focus-visible {
+  outline: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Scrollbar — thin, navy themed                                               */
+/* -------------------------------------------------------------------------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-rich-navy) var(--color-midnight-aviation-navy);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-midnight-aviation-navy);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--color-deep-navy), var(--color-rich-navy));
+  border-radius: 9999px;
+  border: 2px solid var(--color-midnight-aviation-navy);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--color-rose-gold) 35%, var(--color-rich-navy));
+}
+
+/* -------------------------------------------------------------------------- */
+/* Keyframes                                                                   */
+/* -------------------------------------------------------------------------- */
+
+@keyframes breathing-glow {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes text-reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(110%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Utilities — text reveal, hairline, diamond                                    */
+/* -------------------------------------------------------------------------- */
+
+.sk-text-reveal {
+  overflow: hidden;
+}
+
+.sk-text-reveal__inner {
+  display: block;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sk-text-reveal--animate .sk-text-reveal__inner {
+    animation: text-reveal-up var(--duration-luxury) var(--ease-out-expo) both;
+  }
+}
+
+.sk-hairline {
+  height: 1px;
+  width: 100%;
+  border: 0;
+  margin: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-gold) 55%, transparent) 20%,
+    color-mix(in srgb, var(--color-gold) 75%, transparent) 50%,
+    color-mix(in srgb, var(--color-gold) 55%, transparent) 80%,
+    transparent
+  );
+}
+
+.sk-hairline--vertical {
+  width: 1px;
+  height: 100%;
+  min-height: 3rem;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--color-gold) 60%, transparent) 30%,
+    color-mix(in srgb, var(--color-gold) 60%, transparent) 70%,
+    transparent
+  );
+}
+
+.sk-diamond {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-inline-start: 1rem;
+}
+
+.sk-diamond::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0.35rem;
+  height: 0.35rem;
+  margin-top: -0.175rem;
+  background-color: var(--color-rose-gold);
+  transform: rotate(45deg);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-rose-gold) 45%, transparent);
+}
+
+.sk-diamond--gold::before {
+  background-color: var(--color-gold);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-gold) 40%, transparent);
+}
+
+.sk-breathing-glow {
+  animation: breathing-glow var(--duration-breathe) var(--ease-in-out-cubic) infinite;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Reduced motion                                                              */
+/* -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .sk-breathing-glow {
+    animation: none;
+    opacity: 0.85;
+  }
+
+  .sk-text-reveal--animate .sk-text-reveal__inner {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
