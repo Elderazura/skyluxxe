@@ -15,7 +15,7 @@ import {
   maskReveal,
 } from "@/lib/animations";
 import { brand } from "@/content/brand";
-import { lifestyleImages } from "@/content/images";
+import { brandImages, videos } from "@/content/images";
 
 const WORDMARK = "SKYLUXXE";
 
@@ -60,29 +60,43 @@ export function Hero() {
 
   return (
     <section
-      className="relative flex min-h-[100svh] min-h-[100vh] flex-col justify-end overflow-hidden bg-[#0D1B2A]"
+      className="relative flex min-h-[100svh] min-h-[100vh] flex-col justify-end bg-[#0D1B2A]"
       aria-label="Skyluxxe concierge travel"
     >
       <div className="absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute inset-[-6%] h-[112%] w-[112%] sk-m-ken-burns">
+        {reduced ? (
           <Image
-            src={lifestyleImages.jetSunsetAerial}
-            alt="Private jet soaring over a sunset coastline"
+            src={brandImages.leatherJournal}
+            alt=""
             fill
             priority
             className="object-cover object-center"
             sizes="100vw"
           />
-        </div>
+        ) : (
+          <video
+            className="absolute inset-0 h-full w-full min-h-[100svh] object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={brandImages.leatherJournal}
+          >
+            <source src={videos.openingStatementBg} type="video/mp4" />
+          </video>
+        )}
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(to top, #0D1B2A 0%, rgba(13,27,42,0.85) 25%, rgba(13,27,42,0.4) 50%, rgba(13,27,42,0.15) 70%, transparent 100%)",
+            background:
+              "linear-gradient(to top, #0D1B2A 0%, rgba(13,27,42,0.88) 28%, rgba(13,27,42,0.45) 55%, rgba(13,27,42,0.2) 72%, transparent 100%)",
           }}
+          aria-hidden
         />
       </div>
 
-      <div className="relative z-[1] px-[var(--gutter-x)] pb-[clamp(3rem,8vh,6rem)] pt-[60vh] md:max-w-[65%] lg:max-w-[55%]">
+      <div className="relative z-[1] w-full min-w-0 px-[var(--gutter-x)] pb-[clamp(3rem,8vh,6rem)] pt-[60vh]">
         <motion.span
           className="mb-6 block font-[family-name:var(--font-body)] text-xs uppercase tracking-[0.18em] text-white/60"
           initial={reduced ? false : "hidden"}
@@ -105,13 +119,13 @@ export function Hero() {
         />
 
         <motion.div
-          className="mb-8 overflow-hidden"
+          className="mb-8 min-w-0 overflow-visible"
           initial={reduced ? false : "hidden"}
           animate="visible"
           variants={wordmarkVariants}
         >
           <h1
-            className="max-w-full font-[family-name:var(--font-display)] text-[clamp(2.5rem,11vw,10rem)] font-normal leading-[0.95] tracking-[0.08em] text-white md:tracking-[0.18em]"
+            className="w-fit max-w-none font-[family-name:var(--font-display)] text-[clamp(2.5rem,11vw,10rem)] font-normal leading-[0.95] tracking-[0.08em] text-white md:tracking-[0.18em]"
             style={{ fontFeatureSettings: '"liga" 1' }}
           >
             {WORDMARK}

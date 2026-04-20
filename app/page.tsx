@@ -18,8 +18,8 @@ export default function Home() {
       <Hero />
       <OpeningStatement />
       <ImageBreak
-        src={lifestyleImages.hotelChauffeur}
-        alt="Chauffeur waiting at the entrance of a grand hotel"
+        src={lifestyleImages.vipTerminalSunset}
+        alt="VIP terminal at sunset with private jet on the tarmac, concierge desk, and luxury vehicle"
         caption="The Arrival"
       />
       <Sphere />

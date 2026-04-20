@@ -41,6 +41,8 @@ export const lifestyleImages = {
   jetCabinInterior: "/images/website/jet-cabin-interior.png",
   carBackseat: "/images/website/car-backseat.png",
   hotelChauffeur: "/images/website/hotel-chauffeur.png",
+  /** Full-bleed home ImageBreak — VIP terminal, jet on tarmac, golden hour */
+  vipTerminalSunset: "/images/website/vip-terminal-sunset.png",
   womanCarGolden: "/images/website/woman-car-golden.png",
   parisLuggage: "/images/website/paris-luggage.png",
   yachtBreakfast: "/images/website/yacht-breakfast.png",
