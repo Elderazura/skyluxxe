@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 import { brand } from "@/content/brand";
@@ -25,7 +25,10 @@ function useCountUp(
   const [n, setN] = useState(0);
 
   useEffect(() => {
-    if (!active) return;
+    if (!active) {
+      setN(0);
+      return;
+    }
     let frame: number;
     const start = performance.now();
     const step = (now: number) => {
@@ -50,24 +53,22 @@ type ScrollStatsProps = {
 };
 
 export function ScrollStats({ items, className }: ScrollStatsProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-12%" });
   const reduceMotion = useReducedMotion();
 
   return (
     <motion.div
-      ref={ref}
       className={className}
       role="group"
       aria-label="Skyluxxe at a glance"
       variants={staggerContainer}
       initial="hidden"
-      animate={reduceMotion || inView ? "visible" : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, margin: "-8%", amount: 0.35 }}
     >
       <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
         {items.map((item) => (
           <motion.div key={item.id} variants={fadeInUp}>
-            <StatCell item={item} active={reduceMotion || inView} />
+            <StatCell item={item} forceActive={reduceMotion === true} />
           </motion.div>
         ))}
       </div>
@@ -77,17 +78,40 @@ export function ScrollStats({ items, className }: ScrollStatsProps) {
 
 function StatCell({
   item,
-  active,
+  forceActive,
 }: {
   item: ScrollStatItem;
-  active: boolean;
+  forceActive: boolean;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(forceActive);
   const duration = item.durationMs ?? 1800;
   const decimals = item.decimals ?? 0;
   const displayed = useCountUp(item.value, active, duration, decimals);
 
+  useEffect(() => {
+    if (forceActive) {
+      setActive(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setActive(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "-8% 0px", threshold: 0.25 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [forceActive]);
+
   return (
-    <div className="text-center">
+    <div ref={ref} className="text-center">
       <p
         className="font-[family-name:var(--font-display)] text-4xl tabular-nums md:text-5xl"
         style={{ color: brand.colors.offWhite }}

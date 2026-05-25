@@ -21,17 +21,43 @@ export const brand = {
   values: ["Discretion", "Precision", "Excellence"] as const,
   contact: {
     email: "concierge@skyluxxe.ae",
-    phone: "+971 2 000 0000",
-    addressLine1: "Abu Dhabi, UAE",
+    phone: "+971 2 555 0198",
+    addressLine1: "Al Maryah Island, Abu Dhabi, UAE",
     addressLine2: "By appointment only",
+    /** Shown where “always available” might be misread — desk hours are primary. */
+    urgentLine:
+      "Urgent itineraries coordinated outside desk hours by prior arrangement.",
   },
   office: {
     name: "Skyluxxe Concierge Travel",
-    addressLines: ["Abu Dhabi, United Arab Emirates", "By appointment only"] as const,
-    hoursLine: "Monday–Friday · 09:00–18:00 GST (by arrangement)",
+    addressLines: [
+      "Al Maryah Island",
+      "Abu Dhabi, United Arab Emirates",
+      "By appointment only",
+    ] as const,
+    hoursLine: "Monday–Friday · 09:00–18:00 GST",
+    hoursNote: "Enquiries answered within twenty-four hours on business days.",
     /** Google Maps embed (query-centred). */
     mapEmbedUrl:
       "https://maps.google.com/maps?q=24.4539,54.3773&z=11&hl=en&output=embed",
+  },
+  legal: {
+    entityName: "Skyluxxe Concierge Travel",
+    /** Set NEXT_PUBLIC_DED_LICENSE in production when issued. */
+    dedRegistration:
+      process.env.NEXT_PUBLIC_DED_LICENSE?.trim() || "",
+    jurisdiction: "Abu Dhabi, United Arab Emirates",
+  },
+  social: {
+    instagram: "https://www.instagram.com/skyluxxe",
+    linkedin: "https://www.linkedin.com/company/skyluxxe",
+    x: "https://x.com/skyluxxe",
+    pinterest: "https://www.pinterest.com/skyluxxe",
+  },
+  memberships: {
+    headline: "Measured by the company we keep",
+    body:
+      "At Skyluxxe, our standards are measured by the company we keep. We are proud members of the world's most discerning travel, aviation, and hospitality networks — relationships that extend your reach without compromising discretion.",
   },
 } as const;
 

@@ -14,6 +14,8 @@ import { brandImages } from "@/content/images";
 
 export const metadata: Metadata = {
   title: "Our Story",
+  description:
+    "Born in Abu Dhabi — fifteen years of discreet concierge travel for principals who expect precision, warmth, and invisible service.",
 };
 
 const STORY_STATS: readonly ScrollStatItem[] = [
@@ -32,10 +34,10 @@ const STORY_STATS: readonly ScrollStatItem[] = [
     durationMs: 2000,
   },
   {
-    id: "ops",
+    id: "response",
     value: 24,
-    suffix: "/7",
-    label: "global operations",
+    suffix: "h",
+    label: "enquiry response window",
     durationMs: 1400,
   },
 ] as const;
@@ -317,10 +319,12 @@ export default function AboutPage() {
               </MaskedText>
               <MaskedText delay={0.06}>
                 <p
-                  className="mt-5 font-[family-name:var(--font-serif)] text-2xl italic leading-snug md:text-[1.75rem]"
+                  className="mt-5 font-[family-name:var(--font-serif)] text-xl italic leading-relaxed md:text-2xl"
                   style={{ color: brand.colors.offWhite }}
                 >
-                  To redefine luxury travel through silent excellence.
+                  To redefine luxury travel through silent excellence — anticipating
+                  need before it is spoken, and delivering every journey with
+                  human warmth behind an invisible hand.
                 </p>
               </MaskedText>
             </div>
@@ -335,10 +339,12 @@ export default function AboutPage() {
               </MaskedText>
               <MaskedText delay={0.06}>
                 <p
-                  className="mt-5 font-[family-name:var(--font-serif)] text-2xl italic leading-snug md:text-[1.75rem]"
+                  className="mt-5 font-[family-name:var(--font-serif)] text-xl italic leading-relaxed md:text-2xl"
                   style={{ color: brand.colors.offWhite }}
                 >
-                  The world&apos;s most trusted name in private travel.
+                  To become the world&apos;s most trusted name in private travel —
+                  where discretion, craft, and global reach are felt in every
+                  arrival, never announced.
                 </p>
               </MaskedText>
             </div>

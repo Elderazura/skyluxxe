@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import {
   DURATION_MEDIUM,
@@ -22,6 +22,8 @@ const WORDMARK = "SKYLUXXE";
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
   const reduced = prefersReducedMotion === true;
+  const [videoFailed, setVideoFailed] = useState(false);
+  const showPosterOnly = reduced || videoFailed;
 
   const eyebrowVariants = useMemo((): Variants => ({
     hidden: fadeIn.hidden,
@@ -64,7 +66,7 @@ export function Hero() {
       aria-label="Skyluxxe concierge travel"
     >
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {reduced ? (
+        {showPosterOnly ? (
           <Image
             src={brandImages.leatherJournal}
             alt=""
@@ -82,6 +84,8 @@ export function Hero() {
             playsInline
             preload="metadata"
             poster={brandImages.leatherJournal}
+            aria-hidden
+            onError={() => setVideoFailed(true)}
           >
             <source src={videos.openingStatementBg} type="video/mp4" />
           </video>

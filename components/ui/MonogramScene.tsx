@@ -210,7 +210,7 @@ export function MonogramScene({
     <div
       ref={containerRef}
       className={className}
-      style={{ opacity, touchAction: interactive ? "pan-y" : "auto" }}
+      style={{ opacity, touchAction: interactive ? "none" : "auto" }}
     >
       <Canvas
         camera={{ position: [0, 0, 6], fov: 50 }}

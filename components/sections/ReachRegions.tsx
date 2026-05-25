@@ -10,8 +10,9 @@ import { fadeInUp, staggerContainer } from "@/lib/animations";
 export type ReachRegion = {
   id: string;
   name: string;
-  cities: readonly string[];
   image: string;
+  primaryHubs: readonly string[];
+  extendedNetwork: readonly string[];
 };
 
 type ReachRegionsProps = {
@@ -47,7 +48,6 @@ export function ReachRegions({ regions }: ReachRegionsProps) {
                 index > 0 && !isIvoryBand ? "border-t border-white/[0.06]" : ""
               }`}
             >
-              {/* Image */}
               <div className={`relative ${imageOnRight ? "md:order-last" : "md:order-first"}`}>
                 <div className="relative aspect-[4/3] w-full overflow-hidden md:aspect-[3/2]">
                   <Image
@@ -60,7 +60,6 @@ export function ReachRegions({ regions }: ReachRegionsProps) {
                 </div>
               </div>
 
-              {/* Text */}
               <div className={`py-12 md:py-20 ${imageOnRight ? "md:pr-16 lg:pr-24" : "md:pl-16 lg:pl-24"}`}>
                 <h3
                   id={`region-${region.id}`}
@@ -69,12 +68,46 @@ export function ReachRegions({ regions }: ReachRegionsProps) {
                 >
                   {region.name}
                 </h3>
-                <p
-                  className="mt-6 font-[family-name:var(--font-serif)] text-base leading-relaxed md:text-lg"
-                  style={{ color: isIvoryBand ? brand.colors.navy : brand.colors.offWhite, opacity: 0.7 }}
-                >
-                  {region.cities.join(" · ")}
-                </p>
+
+                <div className="mt-8 space-y-6">
+                  <div>
+                    <p
+                      className="font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.16em]"
+                      style={{
+                        color: isIvoryBand ? brand.colors.mutedBlue : brand.colors.roseGold,
+                      }}
+                    >
+                      Primary hubs
+                    </p>
+                    <p
+                      className="mt-3 font-[family-name:var(--font-serif)] text-base leading-relaxed md:text-lg"
+                      style={{
+                        color: isIvoryBand ? brand.colors.navy : brand.colors.offWhite,
+                        opacity: 0.85,
+                      }}
+                    >
+                      {region.primaryHubs.join(" · ")}
+                    </p>
+                  </div>
+                  <div>
+                    <p
+                      className="font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.16em]"
+                      style={{
+                        color: isIvoryBand ? brand.colors.mutedBlue : brand.colors.mutedBlue,
+                      }}
+                    >
+                      Extended network
+                    </p>
+                    <p
+                      className="mt-3 font-[family-name:var(--font-body)] text-sm font-light leading-relaxed md:text-base"
+                      style={{
+                        color: isIvoryBand ? brand.colors.deepNavy : brand.colors.mutedBlue,
+                      }}
+                    >
+                      {region.extendedNetwork.join(" · ")}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </motion.section>

@@ -66,7 +66,7 @@ export function MonogramScroll() {
           className="relative z-10 mt-8 select-none font-[family-name:var(--font-body)] text-[11px] font-normal uppercase tracking-[0.14em] md:text-xs"
           style={{ color: brand.colors.mutedBlue, opacity: 0.55 }}
         >
-          Drag to rotate
+          Drag or swipe to rotate
         </motion.p>
 
         <div

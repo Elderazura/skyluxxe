@@ -19,7 +19,7 @@ import { serviceImages } from "@/content/images";
 export const metadata: Metadata = {
   title: "Our Services",
   description:
-    "Eleven disciplines of invisible service — private aviation, stays, maritime journeys, and bespoke travel architecture.",
+    "Eleven disciplines of invisible service — private aviation, VIP airport concierge, yacht charter, luxury stays, events access, protection travel, and bespoke itineraries.",
 };
 
 export default function ServicesPage() {

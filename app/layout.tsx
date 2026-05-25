@@ -92,6 +92,23 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "TravelAgency",
+  name: "Skyluxxe Concierge Travel",
+  url: "https://skyluxxe.ae",
+  email: "concierge@skyluxxe.ae",
+  telephone: "+97125550198",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Abu Dhabi",
+    addressCountry: "AE",
+  },
+  areaServed: "Worldwide",
+  description:
+    "Abu Dhabi-based ultra-luxury concierge travel for private aviation, stays, yacht charter, and bespoke journeys.",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -104,6 +121,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-body bg-midnight-aviation-navy text-off-white" suppressHydrationWarning>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
         <a href="#main-content" className="skip-to-content">
           Skip to main content
         </a>

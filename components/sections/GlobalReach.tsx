@@ -25,7 +25,7 @@ const cities = [
 const stats = [
   { value: "150+", label: "destinations" },
   { value: "15+", label: "years of expertise" },
-  { value: "24/7", label: "global operations" },
+  { value: "24h", label: "enquiry response window" },
 ] as const;
 
 export function GlobalReach() {

@@ -53,10 +53,12 @@ export const lifestyleImages = {
 export const serviceImages: Record<string, string> = {
   "private-aviation": lifestyleImages.jetTarmacAerial,
   "vip-airport-concierge": lifestyleImages.jetStairsTarmac,
-  "private-jet-charter": lifestyleImages.jetCabinReading,
+  "private-jet-charter": lifestyleImages.jetTarmacAerial,
   "private-yacht-charter": lifestyleImages.yachtBreakfast,
-  "luxury-hotel-villa-stays": lifestyleImages.hotelChauffeur,
-  "prestige-events-access": brandImages.cufflinks,
+  "luxury-hotel-villa-stays":
+    "/new_images/05_Luxury_Stays_Resort_Collection_Coastal_Suite.png",
+  "prestige-events-access":
+    "/new_images/08_Prestige_Events_Elite_Access_Motorsport_Lounge.png",
   "executive-protection-travel":
     "/new_images/09_Royal_Executive_Protection_Travel_Management.png",
   "private-island-retreats": lifestyleImages.safariDining,

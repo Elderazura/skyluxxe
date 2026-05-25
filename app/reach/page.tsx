@@ -14,37 +14,44 @@ import { lifestyleImages, brandImages } from "@/content/images";
 
 export const metadata: Metadata = {
   title: "Global Reach",
+  description:
+    "Abu Dhabi at the centre — primary hubs and an extended partner network across the Middle East, Europe, Asia Pacific, the Americas, and the Indian Ocean.",
 };
 
 const REGIONS: readonly ReachRegion[] = [
   {
     id: "me",
     name: "Middle East & GCC",
-    cities: ["Abu Dhabi", "Dubai", "Riyadh", "Doha", "Bahrain"],
+    primaryHubs: ["Abu Dhabi", "Dubai", "Riyadh"],
+    extendedNetwork: ["Doha", "Bahrain", "Muscat", "Kuwait City"],
     image: brandImages.receptionDesk,
   },
   {
     id: "eu",
     name: "Europe",
-    cities: ["London", "Paris", "Geneva", "Monaco", "Milan", "Zurich"],
+    primaryHubs: ["London", "Paris", "Geneva"],
+    extendedNetwork: ["Monaco", "Milan", "Zurich", "Saint-Tropez", "Amsterdam"],
     image: lifestyleImages.parisLuggage,
   },
   {
     id: "apac",
     name: "Asia Pacific",
-    cities: ["Tokyo", "Singapore", "Hong Kong", "Maldives", "Bali"],
+    primaryHubs: ["Tokyo", "Singapore", "Hong Kong"],
+    extendedNetwork: ["Maldives", "Bali", "Sydney", "Seoul"],
     image: brandImages.beachsideDining,
   },
   {
     id: "americas",
     name: "Americas",
-    cities: ["New York", "Los Angeles", "Miami", "Aspen", "São Paulo"],
+    primaryHubs: ["New York", "Los Angeles", "Miami"],
+    extendedNetwork: ["Aspen", "São Paulo", "Mexico City", "Toronto"],
     image: lifestyleImages.manExitingJet,
   },
   {
     id: "africa",
     name: "Africa & Indian Ocean",
-    cities: ["Cape Town", "Marrakech", "Seychelles", "Mauritius"],
+    primaryHubs: ["Cape Town", "Marrakech", "Seychelles"],
+    extendedNetwork: ["Mauritius", "Zanzibar", "Nairobi"],
     image: lifestyleImages.safariDining,
   },
 ];

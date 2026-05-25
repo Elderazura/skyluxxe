@@ -109,19 +109,69 @@ function ReducedMotionFallback() {
   );
 }
 
+function StaticGlobeFallback() {
+  return (
+    <div
+      className="flex h-full min-h-[280px] flex-col items-center justify-center rounded-sm border border-white/[0.08] p-6 md:min-h-[360px] md:p-10"
+      style={{
+        background: `radial-gradient(ellipse 80% 70% at 50% 40%, ${brand.colors.richNavy} 0%, ${brand.colors.navy} 55%, #0a121c 100%)`,
+      }}
+      role="img"
+      aria-label="Illustrative world map with Abu Dhabi as the primary hub and global touchpoints"
+    >
+      <svg
+        viewBox="0 0 400 220"
+        className="h-auto w-full max-w-[520px] text-white/25"
+        aria-hidden
+      >
+        <ellipse cx="200" cy="110" rx="185" ry="95" fill="none" stroke="currentColor" strokeWidth="0.75" />
+        <ellipse cx="200" cy="110" rx="120" ry="60" fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.6" />
+        <circle cx="248" cy="118" r="5" fill="#DFA293" />
+        <circle cx="120" cy="92" r="3" fill="#8A9AB5" />
+        <circle cx="95" cy="105" r="3" fill="#8A9AB5" />
+        <circle cx="210" cy="88" r="3" fill="#8A9AB5" />
+        <circle cx="300" cy="100" r="3" fill="#8A9AB5" />
+        <circle cx="320" cy="130" r="3" fill="#8A9AB5" />
+        <circle cx="175" cy="145" r="3" fill="#8A9AB5" />
+      </svg>
+      <p className="mt-6 text-center font-[family-name:var(--font-body)] text-[11px] font-light uppercase tracking-[0.14em] text-white/35">
+        Abu Dhabi hub · illustrative coverage
+      </p>
+    </div>
+  );
+}
+
+function detectWebGL(): boolean {
+  if (typeof window === "undefined") return true;
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      canvas.getContext("webgl") ?? canvas.getContext("experimental-webgl")
+    );
+  } catch {
+    return false;
+  }
+}
+
 export function ReachCoverageGlobe() {
   const [reduceMotion, setReduceMotion] = useState(false);
+  const [webglOk, setWebglOk] = useState(true);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setReduceMotion(mq.matches);
     update();
     mq.addEventListener("change", update);
+    setWebglOk(detectWebGL());
     return () => mq.removeEventListener("change", update);
   }, []);
 
   if (reduceMotion) {
     return <ReducedMotionFallback />;
+  }
+
+  if (!webglOk) {
+    return <StaticGlobeFallback />;
   }
 
   return (

@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { Hero } from "@/components/sections/Hero";
 import { OpeningStatement } from "@/components/sections/OpeningStatement";
 import { ImageBreak } from "@/components/sections/ImageBreak";
@@ -10,7 +12,14 @@ import { Clientele } from "@/components/sections/Clientele";
 import { GlobalReach } from "@/components/sections/GlobalReach";
 import { DiscretionStatement } from "@/components/sections/DiscretionStatement";
 import { EnquiryCta } from "@/components/sections/EnquiryCta";
+import { CredibilityBand } from "@/components/sections/CredibilityBand";
 import { lifestyleImages } from "@/content/images";
+
+export const metadata: Metadata = {
+  title: "Skyluxxe Concierge Travel",
+  description:
+    "The Art of Invisible Service — Abu Dhabi-based ultra-luxury concierge for private aviation, stays, yacht charter, and bespoke travel.",
+};
 
 export default function Home() {
   return (
@@ -41,6 +50,7 @@ export default function Home() {
       />
       <GlobalReach />
       <DiscretionStatement />
+      <CredibilityBand />
       <EnquiryCta />
     </>
   );
