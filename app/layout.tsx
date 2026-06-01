@@ -7,6 +7,8 @@ import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Cursor } from "@/components/ui/Cursor";
 import { Preloader } from "@/components/ui/Preloader";
 import { CookieConsent } from "@/components/ui/CookieConsent";
+import { SITE_URL, siteSummary } from "@/content/site-discovery";
+import { getSiteJsonLdScript } from "@/lib/json-ld";
 import "./globals.css";
 
 const italiana = localFont({
@@ -74,13 +76,43 @@ const inter = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://skyluxxe.ae"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Skyluxxe Concierge Travel",
     template: "%s — Skyluxxe Concierge Travel",
   },
-  description:
-    "The Art of Invisible Service. Abu Dhabi-based ultra-luxury concierge travel for the world's most discerning individuals.",
+  description: siteSummary,
+  applicationName: "Skyluxxe Concierge Travel",
+  category: "Travel",
+  alternates: {
+    canonical: "/",
+    types: {
+      "text/plain": "/llms.txt",
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_AE",
+    url: SITE_URL,
+    siteName: "Skyluxxe Concierge Travel",
+    title: "Skyluxxe Concierge Travel",
+    description: siteSummary,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Skyluxxe Concierge Travel",
+    description: siteSummary,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: logos.monogramRoseGold,
     shortcut: logos.monogramRoseGold,
@@ -91,26 +123,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-};
-
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "TravelAgency",
-  name: "Skyluxxe Concierge Travel",
-  legalName: "SKYLUXXE CONCIERGE TRAVEL - L.L.C - S.P.C",
-  url: "https://skyluxxe.ae",
-  email: "concierge@skyluxxe.ae",
-  telephone: "+971567663455",
-  taxID: "105246637000003",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Al Khazna Tower, Najdah Street",
-    addressLocality: "Abu Dhabi",
-    addressCountry: "AE",
-  },
-  areaServed: "Worldwide",
-  description:
-    "Abu Dhabi-based ultra-luxury concierge travel for private aviation, stays, yacht charter, and bespoke journeys.",
 };
 
 export default function RootLayout({
@@ -127,7 +139,7 @@ export default function RootLayout({
       <body className="font-body bg-midnight-aviation-navy text-off-white" suppressHydrationWarning>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: getSiteJsonLdScript() }}
         />
         <a href="#main-content" className="skip-to-content">
           Skip to main content
