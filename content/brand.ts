@@ -21,8 +21,11 @@ export const brand = {
   values: ["Discretion", "Precision", "Excellence"] as const,
   contact: {
     email: "concierge@skyluxxe.ae",
-    phone: "+971 2 555 0198",
-    addressLine1: "Al Maryah Island, Abu Dhabi, UAE",
+    phone: "+971 56 766 3455",
+    /** Same number for voice and WhatsApp. */
+    whatsAppUrl: "https://wa.me/971567663455",
+    phoneTel: "+971567663455",
+    addressLine1: "Al Khazna Tower, Najdah Street, Abu Dhabi, UAE",
     addressLine2: "By appointment only",
     /** Shown where “always available” might be misread — desk hours are primary. */
     urgentLine:
@@ -31,7 +34,7 @@ export const brand = {
   office: {
     name: "Skyluxxe Concierge Travel",
     addressLines: [
-      "Al Maryah Island",
+      "Al Khazna Tower, Najdah Street",
       "Abu Dhabi, United Arab Emirates",
       "By appointment only",
     ] as const,
@@ -39,20 +42,26 @@ export const brand = {
     hoursNote: "Enquiries answered within twenty-four hours on business days.",
     /** Google Maps embed (query-centred). */
     mapEmbedUrl:
-      "https://maps.google.com/maps?q=24.4539,54.3773&z=11&hl=en&output=embed",
+      "https://maps.google.com/maps?q=Al+Khazna+Tower,+Najdah+Street,+Abu+Dhabi&z=15&hl=en&output=embed",
   },
   legal: {
-    entityName: "Skyluxxe Concierge Travel",
-    /** Set NEXT_PUBLIC_DED_LICENSE in production when issued. */
-    dedRegistration:
-      process.env.NEXT_PUBLIC_DED_LICENSE?.trim() || "",
+    entityName: "Skyluxxe Concierge Travel — L.L.C — S.P.C",
+    /** Abu Dhabi DED trade licence (VAT certificate, Dec 2025). */
+    dedLicense: process.env.NEXT_PUBLIC_DED_LICENSE?.trim() || "CN-6236503",
+    dedAuthority: "Abu Dhabi Department of Economic Development",
+    /** UAE VAT Tax Registration Number (FTA certificate, effective 01/01/2026). */
+    vatTrn: process.env.NEXT_PUBLIC_VAT_TRN?.trim() || "105246637000003",
+    registeredAddressLines: [
+      "Al Khazna Tower, Najdah Street",
+      "Abu Dhabi, United Arab Emirates",
+    ] as const,
     jurisdiction: "Abu Dhabi, United Arab Emirates",
   },
   social: {
-    instagram: "https://www.instagram.com/skyluxxe",
-    linkedin: "https://www.linkedin.com/company/skyluxxe",
-    x: "https://x.com/skyluxxe",
-    pinterest: "https://www.pinterest.com/skyluxxe",
+    instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM?.trim() || "https://www.instagram.com/skyluxxe",
+    linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN?.trim() || "https://www.linkedin.com/company/skyluxxe",
+    x: process.env.NEXT_PUBLIC_SOCIAL_X?.trim() || "https://x.com/skyluxxe",
+    pinterest: process.env.NEXT_PUBLIC_SOCIAL_PINTEREST?.trim() || "https://www.pinterest.com/skyluxxe",
   },
   memberships: {
     headline: "Measured by the company we keep",

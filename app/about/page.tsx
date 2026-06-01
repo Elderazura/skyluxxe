@@ -247,28 +247,34 @@ export default function AboutPage() {
         </div>
 
         <div className="mx-auto mt-16 max-w-[var(--container-max)] md:mt-20">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-5">
-            <RevealImage
-              src={brandImages.membershipCard}
-              alt="Membership and credentials — relationship, not transaction."
-              width={640}
-              height={800}
-              responsive
-            />
-            <RevealImage
-              src={brandImages.travelBag}
-              alt="Travel bag and personal effects — the private choreography of departure."
-              width={640}
-              height={800}
-              responsive
-            />
-            <RevealImage
-              src={brandImages.conciergeLounge}
-              alt="Concierge lounge — composed space before the next movement."
-              width={640}
-              height={800}
-              responsive
-            />
+          <div className="-mx-[var(--gutter-x)] flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--gutter-x)] pb-3 [scrollbar-width:none] sm:mx-0 sm:grid sm:snap-none sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden">
+            <div className="w-[min(78vw,320px)] shrink-0 snap-center sm:w-auto sm:shrink">
+              <RevealImage
+                src={brandImages.membershipCard}
+                alt="Membership and credentials — relationship, not transaction."
+                width={640}
+                height={800}
+                responsive
+              />
+            </div>
+            <div className="w-[min(78vw,320px)] shrink-0 snap-center sm:w-auto sm:shrink">
+              <RevealImage
+                src={brandImages.travelBag}
+                alt="Travel bag and personal effects — the private choreography of departure."
+                width={640}
+                height={800}
+                responsive
+              />
+            </div>
+            <div className="w-[min(78vw,320px)] shrink-0 snap-center sm:w-auto sm:shrink">
+              <RevealImage
+                src={brandImages.conciergeLounge}
+                alt="Concierge lounge — composed space before the next movement."
+                width={640}
+                height={800}
+                responsive
+              />
+            </div>
           </div>
         </div>
       </section>

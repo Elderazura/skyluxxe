@@ -8,7 +8,7 @@ import { MaskedText } from "@/components/ui/MaskedText";
 import { RevealImage } from "@/components/ui/RevealImage";
 import { GlimpseRail } from "@/components/sections/GlimpseRail";
 import { ServicesShowcaseBanners } from "@/components/sections/ServicesShowcaseBanners";
-import {
+import { 
   services,
   serviceOverviewAnchorId,
 } from "@/content/services";
@@ -73,12 +73,12 @@ export default function ServicesPage() {
         aria-label="Service disciplines"
       >
         <ol className="mx-auto max-w-[var(--spacing-container)] list-none">
-          {services.map((service, index) => {
+            {services.map((service, index) => {
             const anchorId = serviceOverviewAnchorId(service);
             const imgSrc = serviceImages[service.slug];
             const imageOnRight = index % 2 === 0;
-
-            return (
+              
+              return (
               <li
                 key={service.id}
                 id={anchorId}
@@ -151,7 +151,7 @@ export default function ServicesPage() {
                               >
                                 &rarr;
                               </span>
-                            </Link>
+                              </Link>
                           </p>
                         </div>
                       </div>
@@ -163,7 +163,7 @@ export default function ServicesPage() {
                         <RevealImage>
                           <Link href={`/services/${service.slug}`} className="block">
                             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-sm">
-                              <Image
+                        <Image
                                 src={imgSrc}
                                 alt={service.name}
                                 fill
@@ -173,13 +173,13 @@ export default function ServicesPage() {
                             </div>
                           </Link>
                         </RevealImage>
-                      </div>
+                          </div>
                     )}
                   </div>
                 </MaskedText>
               </li>
-            );
-          })}
+              );
+            })}
         </ol>
       </section>
 

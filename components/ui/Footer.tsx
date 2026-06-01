@@ -63,10 +63,6 @@ function SocialIcon({ label }: { label: string }) {
 }
 
 export function Footer() {
-  const dedLine = brand.legal.dedRegistration
-    ? `DED licence ${brand.legal.dedRegistration}`
-    : `Registered in ${brand.legal.jurisdiction}`;
-
   return (
     <footer className="bg-[#162235]">
       <div className="sk-hairline" aria-hidden />
@@ -89,16 +85,27 @@ export function Footer() {
                 {brand.contact.email}
               </a>
               <br />
-              <a href={`tel:${brand.contact.phone.replace(/\s/g, "")}`} className="hover:text-[#DFA293]">
+              <a href={`tel:${brand.contact.phoneTel}`} className="hover:text-[#DFA293]">
                 {brand.contact.phone}
+              </a>
+              <br />
+              <a
+                href={brand.contact.whatsAppUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#DFA293]"
+              >
+                WhatsApp · {brand.contact.phone}
               </a>
               <br />
               {brand.contact.addressLine1}
             </p>
             <p className="mt-4 font-[family-name:var(--font-body)] text-xs leading-relaxed text-[#8A9AB5]/70">
-              {dedLine}
-              <br />
               {brand.legal.entityName}
+              <br />
+              DED licence {brand.legal.dedLicense}
+              <br />
+              VAT TRN {brand.legal.vatTrn}
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">

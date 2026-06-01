@@ -35,7 +35,7 @@ export const privacyPolicy = {
     {
       heading: "Contact",
       body:
-        "Data protection enquiries: concierge@skyluxxe.ae · Skyluxxe Concierge Travel, Al Maryah Island, Abu Dhabi, UAE.",
+        "Data protection enquiries: concierge@skyluxxe.ae · Skyluxxe Concierge Travel, Al Khazna Tower, Najdah Street, Abu Dhabi, UAE.",
     },
   ],
 } as const;

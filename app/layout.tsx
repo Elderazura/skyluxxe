@@ -6,6 +6,7 @@ import { Footer } from "@/components/ui/Footer";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Cursor } from "@/components/ui/Cursor";
 import { Preloader } from "@/components/ui/Preloader";
+import { CookieConsent } from "@/components/ui/CookieConsent";
 import "./globals.css";
 
 const italiana = localFont({
@@ -96,11 +97,14 @@ const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "TravelAgency",
   name: "Skyluxxe Concierge Travel",
+  legalName: "SKYLUXXE CONCIERGE TRAVEL - L.L.C - S.P.C",
   url: "https://skyluxxe.ae",
   email: "concierge@skyluxxe.ae",
-  telephone: "+97125550198",
+  telephone: "+971567663455",
+  taxID: "105246637000003",
   address: {
     "@type": "PostalAddress",
+    streetAddress: "Al Khazna Tower, Najdah Street",
     addressLocality: "Abu Dhabi",
     addressCountry: "AE",
   },
@@ -134,6 +138,7 @@ export default function RootLayout({
           <Navigation />
           <main id="main-content">{children}</main>
           <Footer />
+          <CookieConsent />
         </SmoothScroll>
       </body>
     </html>

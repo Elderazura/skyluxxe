@@ -156,17 +156,26 @@ function detectWebGL(): boolean {
 export function ReachCoverageGlobe() {
   const [reduceMotion, setReduceMotion] = useState(false);
   const [webglOk, setWebglOk] = useState(true);
+  const [preferStatic, setPreferStatic] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduceMotion(mq.matches);
+    const mobileMq = window.matchMedia("(max-width: 767px)");
+    const update = () => {
+      setReduceMotion(mq.matches);
+      setPreferStatic(mobileMq.matches);
+    };
     update();
     mq.addEventListener("change", update);
+    mobileMq.addEventListener("change", update);
     setWebglOk(detectWebGL());
-    return () => mq.removeEventListener("change", update);
+    return () => {
+      mq.removeEventListener("change", update);
+      mobileMq.removeEventListener("change", update);
+    };
   }, []);
 
-  if (reduceMotion) {
+  if (reduceMotion || preferStatic) {
     return <ReducedMotionFallback />;
   }
 

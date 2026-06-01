@@ -1,15 +1,26 @@
 "use client";
 
-import { useCallback, useId, useState, type FormEvent } from "react";
+import { useCallback, useId, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { DiamondMarker } from "@/components/ui/DiamondMarker";
 import { HairlineRule } from "@/components/ui/HairlineRule";
 import { MaskedText } from "@/components/ui/MaskedText";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/ui/TurnstileWidget";
 import { brand } from "@/content/brand";
 import { ENQUIRY_NATURE_OPTIONS } from "@/content/enquiry";
 import { lifestyleImages, brandImages, logos } from "@/content/images";
+import {
+  mapApiErrorToFields,
+  validateEnquiryFields,
+  type EnquiryFieldErrors,
+} from "@/lib/enquiry-validation";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? "";
 
 const fieldBase =
   "w-full border-0 border-b bg-transparent pb-3 text-base font-light text-off-white outline-none transition-[border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] focus-visible:ring-0";
@@ -25,18 +36,26 @@ const fieldBorderError = {
 const labelClass =
   "mb-3 block font-[family-name:var(--font-body)] text-xs font-light uppercase tracking-[0.14em] text-muted-blue";
 
-type FieldErrors = Partial<Record<"name" | "email" | "nature" | "message" | "form", string>>;
+type FieldErrors = EnquiryFieldErrors & { form?: string };
 
 export function EnquiryPageContent() {
   const formId = useId();
+  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
 
+  const clearFieldError = useCallback((field: keyof FieldErrors) => {
+    setErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  }, []);
+
   const onSubmit = useCallback(async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors({});
-    setSubmitting(true);
 
     const form = e.currentTarget;
     const data = new FormData(form);
@@ -48,26 +67,56 @@ export function EnquiryPageContent() {
       message: String(data.get("message") ?? ""),
     };
 
+    const clientErrors = validateEnquiryFields(payload);
+    if (TURNSTILE_SITE_KEY && !turnstileRef.current?.getToken()) {
+      clientErrors.turnstile = "Please complete the security check.";
+    }
+
+    if (Object.keys(clientErrors).length > 0) {
+      setErrors(clientErrors);
+      return;
+    }
+
+    setErrors({});
+    setSubmitting(true);
+
     try {
       const res = await fetch("/api/enquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          ...payload,
+          turnstileToken: turnstileRef.current?.getToken() ?? undefined,
+        }),
       });
-      const json = (await res.json()) as { error?: string; ok?: boolean };
+      const json = (await res.json()) as {
+        error?: string;
+        fields?: EnquiryFieldErrors;
+        ok?: boolean;
+      };
 
       if (!res.ok) {
-        setErrors({ form: json.error ?? "Something went wrong. Please try again or email us directly." });
+        const apiFields = json.fields ?? mapApiErrorToFields(json.error ?? "");
+        setErrors({
+          ...apiFields,
+          form:
+            json.error && Object.keys(apiFields).length === 0
+              ? json.error
+              : undefined,
+        });
+        turnstileRef.current?.reset();
         setSubmitting(false);
         return;
       }
 
       setSubmitted(true);
       form.reset();
+      turnstileRef.current?.reset();
     } catch {
       setErrors({
         form: "We could not send your enquiry. Please email concierge@skyluxxe.ae directly.",
       });
+      turnstileRef.current?.reset();
     } finally {
       setSubmitting(false);
     }
@@ -166,10 +215,20 @@ export function EnquiryPageContent() {
                   ))}
                   <p>
                     <a
-                      href={`tel:${brand.contact.phone.replace(/\s/g, "")}`}
+                      href={`tel:${brand.contact.phoneTel}`}
                       className="text-[#DFA293] transition-opacity hover:opacity-85"
                     >
                       {brand.contact.phone}
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      href={brand.contact.whatsAppUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#DFA293] transition-opacity hover:opacity-85"
+                    >
+                      WhatsApp · {brand.contact.phone}
                     </a>
                   </p>
                   <p>
@@ -252,11 +311,15 @@ export function EnquiryPageContent() {
                     autoComplete="name"
                     required
                     aria-invalid={!!errors.name}
+                    aria-describedby={errors.name ? `${formId}-name-error` : undefined}
+                    onInput={() => clearFieldError("name")}
                     className={`${fieldBase} focus:border-rose-gold`}
                     style={errors.name ? fieldBorderError : fieldBorderDefault}
                   />
                   {errors.name ? (
-                    <p className="mt-2 text-sm text-[#DFA293]">{errors.name}</p>
+                    <p id={`${formId}-name-error`} className="mt-2 text-sm text-[#DFA293]">
+                      {errors.name}
+                    </p>
                   ) : null}
                 </div>
 
@@ -272,11 +335,15 @@ export function EnquiryPageContent() {
                     inputMode="email"
                     required
                     aria-invalid={!!errors.email}
+                    aria-describedby={errors.email ? `${formId}-email-error` : undefined}
+                    onInput={() => clearFieldError("email")}
                     className={`${fieldBase} focus:border-rose-gold`}
                     style={errors.email ? fieldBorderError : fieldBorderDefault}
                   />
                   {errors.email ? (
-                    <p className="mt-2 text-sm text-[#DFA293]">{errors.email}</p>
+                    <p id={`${formId}-email-error`} className="mt-2 text-sm text-[#DFA293]">
+                      {errors.email}
+                    </p>
                   ) : null}
                 </div>
 
@@ -305,6 +372,8 @@ export function EnquiryPageContent() {
                       required
                       defaultValue=""
                       aria-invalid={!!errors.nature}
+                      aria-describedby={errors.nature ? `${formId}-nature-error` : undefined}
+                      onChange={() => clearFieldError("nature")}
                       className={`${fieldBase} cursor-pointer appearance-none pr-10 focus:border-rose-gold`}
                       style={errors.nature ? fieldBorderError : fieldBorderDefault}
                     >
@@ -333,7 +402,9 @@ export function EnquiryPageContent() {
                     </span>
                   </div>
                   {errors.nature ? (
-                    <p className="mt-2 text-sm text-[#DFA293]">{errors.nature}</p>
+                    <p id={`${formId}-nature-error`} className="mt-2 text-sm text-[#DFA293]">
+                      {errors.nature}
+                    </p>
                   ) : null}
                 </div>
 
@@ -347,13 +418,32 @@ export function EnquiryPageContent() {
                     rows={5}
                     required
                     aria-invalid={!!errors.message}
+                    aria-describedby={errors.message ? `${formId}-message-error` : undefined}
+                    onInput={() => clearFieldError("message")}
                     className={`${fieldBase} min-h-[8rem] resize-y focus:border-rose-gold`}
                     style={errors.message ? fieldBorderError : fieldBorderDefault}
                   />
                   {errors.message ? (
-                    <p className="mt-2 text-sm text-[#DFA293]">{errors.message}</p>
+                    <p id={`${formId}-message-error`} className="mt-2 text-sm text-[#DFA293]">
+                      {errors.message}
+                    </p>
                   ) : null}
                 </div>
+
+                {TURNSTILE_SITE_KEY ? (
+                  <div>
+                    <TurnstileWidget
+                      ref={turnstileRef}
+                      siteKey={TURNSTILE_SITE_KEY}
+                      onReady={() => clearFieldError("turnstile")}
+                    />
+                    {errors.turnstile ? (
+                      <p role="alert" className="mt-2 text-sm text-[#DFA293]">
+                        {errors.turnstile}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
 
                 <p className="font-[family-name:var(--font-body)] text-sm font-light leading-relaxed text-muted-blue">
                   By submitting this form you agree to our{" "}
