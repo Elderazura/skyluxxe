@@ -101,7 +101,11 @@
 
 html {
   color-scheme: dark;
-  scroll-behavior: smooth;
+  /* No `scroll-behavior: smooth` here: Lenis (components/ui/SmoothScroll.tsx)
+     already smooths scrolling in JS. Stacking the two makes every anchor jump
+     and programmatic scroll lag twice over. Lenis bails out under
+     prefers-reduced-motion, and the media query below restores native
+     behaviour for that case. */
 }
 
 body {

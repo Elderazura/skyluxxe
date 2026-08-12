@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { brand } from "@/content/brand";
@@ -12,6 +12,32 @@ const MonogramScene = dynamic(
 
 export function MonogramScroll() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [nearViewport, setNearViewport] = useState(false);
+
+  /*
+   * This section sits roughly 19,000px down the homepage, but `dynamic()` fires
+   * its import the moment the component mounts — pulling the three.js/drei
+   * bundle and the 2.8MB monogram GLB during initial hydration for something
+   * about twenty-six viewports away. Hold the import until the reader is
+   * actually approaching it.
+   */
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setNearViewport(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "100% 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -56,10 +82,13 @@ export function MonogramScroll() {
         </motion.div>
 
         <motion.div
+          ref={stageRef}
           className="relative z-10 h-[60vw] w-[60vw] max-h-[520px] max-w-[520px] md:h-[50vh] md:w-[50vh] md:max-h-[600px] md:max-w-[600px]"
           style={{ opacity, scale }}
         >
-          <MonogramScene className="h-full w-full" interactive scale={2} />
+          {nearViewport && (
+            <MonogramScene className="h-full w-full" interactive scale={2} />
+          )}
         </motion.div>
 
         <motion.p

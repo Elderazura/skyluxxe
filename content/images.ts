@@ -8,23 +8,23 @@ export const logos = {
 } as const;
 
 export const brandImages = {
-  monogramNavy: "/images/brand/monogram-navy.png",
-  giftBox: "/images/brand/gift-box.png",
-  inFlightUmbrella: "/images/brand/in-flight-umbrella.png",
-  receptionDesk: "/images/brand/reception-desk.png",
-  leatherJournal: "/images/brand/leather-journal.png",
-  beachsideDining: "/images/brand/beachside-dining.png",
-  candleStationery: "/images/brand/candle-stationery.png",
-  luggageTag: "/images/brand/luggage-tag.png",
-  privateJetTarmac: "/images/brand/private-jet-tarmac.png",
-  membershipCard: "/images/brand/membership-card.png",
-  luxuryAccessories: "/images/brand/luxury-accessories.png",
-  cufflinks: "/images/brand/cufflinks.png",
-  travelBag: "/images/brand/travel-bag.png",
-  coastalTote: "/images/brand/coastal-tote.png",
-  luxuryLuggage: "/images/brand/luxury-luggage.png",
-  cashmereBlanket: "/images/brand/cashmere-blanket.png",
-  conciergeLounge: "/images/brand/concierge-lounge.png",
+  monogramNavy: "/images/brand/monogram-navy.webp",
+  giftBox: "/images/brand/gift-box.webp",
+  inFlightUmbrella: "/images/brand/in-flight-umbrella.webp",
+  receptionDesk: "/images/brand/reception-desk.webp",
+  leatherJournal: "/images/brand/leather-journal.webp",
+  beachsideDining: "/images/brand/beachside-dining.webp",
+  candleStationery: "/images/brand/candle-stationery.webp",
+  luggageTag: "/images/brand/luggage-tag.webp",
+  privateJetTarmac: "/images/brand/private-jet-tarmac.webp",
+  membershipCard: "/images/brand/membership-card.webp",
+  luxuryAccessories: "/images/brand/luxury-accessories.webp",
+  cufflinks: "/images/brand/cufflinks.webp",
+  travelBag: "/images/brand/travel-bag.webp",
+  coastalTote: "/images/brand/coastal-tote.webp",
+  luxuryLuggage: "/images/brand/luxury-luggage.webp",
+  cashmereBlanket: "/images/brand/cashmere-blanket.webp",
+  conciergeLounge: "/images/brand/concierge-lounge.webp",
 } as const;
 
 /** Web-optimized loop for backgrounds (H.264, ~1280px max). Source: `public/hero.mp4`. */
@@ -33,21 +33,21 @@ export const videos = {
 } as const;
 
 export const lifestyleImages = {
-  jetSunsetAerial: "/new_images/06_Private_Yacht_Superyacht_Charter_Sunset.png",
-  jetTarmacAerial: "/new_images/01_Cover_Private_Aviation_Daylight_Hero.png",
-  jetStairsTarmac: "/new_images/03_VIP_Airport_Meet_Assist_Corridor.png",
-  manExitingJet: "/new_images/01_COVER_Private_Aviation_Arrival.png",
-  jetCabinReading: "/new_images/02_VIP_Airport_Concierge_Lounge.png",
-  jetCabinInterior: "/new_images/02_Private_Terminal_Lounge_Greeting.png",
-  carBackseat: "/new_images/04_Chauffeured_Luxury_Mobility_Daylight.png",
-  hotelChauffeur: "/new_images/04_Chauffeured_Luxury_Mobility_Hotel_Arrival.png",
+  jetSunsetAerial: "/new_images/06_Private_Yacht_Superyacht_Charter_Sunset.webp",
+  jetTarmacAerial: "/new_images/01_Cover_Private_Aviation_Daylight_Hero.webp",
+  jetStairsTarmac: "/new_images/03_VIP_Airport_Meet_Assist_Corridor.webp",
+  manExitingJet: "/new_images/01_COVER_Private_Aviation_Arrival.webp",
+  jetCabinReading: "/new_images/02_VIP_Airport_Concierge_Lounge.webp",
+  jetCabinInterior: "/new_images/02_Private_Terminal_Lounge_Greeting.webp",
+  carBackseat: "/new_images/04_Chauffeured_Luxury_Mobility_Daylight.webp",
+  hotelChauffeur: "/new_images/04_Chauffeured_Luxury_Mobility_Hotel_Arrival.webp",
   /** Full-bleed home ImageBreak — arrival / terminal mood */
-  vipTerminalSunset: "/new_images/02_Private_Terminal_Lounge_Greeting.png",
-  womanCarGolden: "/new_images/04_Chauffeured_Luxury_Mobility_Daylight.png",
-  parisLuggage: "/new_images/07_Signature_Journeys_Cultural_Experience.png",
-  yachtBreakfast: "/new_images/06_Private_Yacht_Superyacht_Daylight.png",
-  womanCarCobblestone: "/new_images/04_Chauffeured_Luxury_Mobility_Daylight.png",
-  safariDining: "/new_images/05_Luxury_Stays_Resort_Collection_Coastal_Suite.png",
+  vipTerminalSunset: "/new_images/02_Private_Terminal_Lounge_Greeting.webp",
+  womanCarGolden: "/new_images/04_Chauffeured_Luxury_Mobility_Daylight.webp",
+  parisLuggage: "/new_images/07_Signature_Journeys_Cultural_Experience.webp",
+  yachtBreakfast: "/new_images/06_Private_Yacht_Superyacht_Daylight.webp",
+  womanCarCobblestone: "/new_images/04_Chauffeured_Luxury_Mobility_Daylight.webp",
+  safariDining: "/new_images/05_Luxury_Stays_Resort_Collection_Coastal_Suite.webp",
 } as const;
 
 export const serviceImages: Record<string, string> = {
@@ -56,11 +56,11 @@ export const serviceImages: Record<string, string> = {
   "private-jet-charter": lifestyleImages.jetTarmacAerial,
   "private-yacht-charter": lifestyleImages.yachtBreakfast,
   "luxury-hotel-villa-stays":
-    "/new_images/05_Luxury_Stays_Resort_Collection_Coastal_Suite.png",
+    "/new_images/05_Luxury_Stays_Resort_Collection_Coastal_Suite.webp",
   "prestige-events-access":
-    "/new_images/08_Prestige_Events_Elite_Access_Motorsport_Lounge.png",
+    "/new_images/08_Prestige_Events_Elite_Access_Motorsport_Lounge.webp",
   "executive-protection-travel":
-    "/new_images/09_Royal_Executive_Protection_Travel_Management.png",
+    "/new_images/09_Royal_Executive_Protection_Travel_Management.webp",
   "private-island-retreats": lifestyleImages.safariDining,
   "luxury-ground-transport": lifestyleImages.womanCarCobblestone,
   "bespoke-itinerary-design": lifestyleImages.parisLuggage,

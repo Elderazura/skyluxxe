@@ -9,6 +9,9 @@ const COLOR = '#DFA293'
 const OPACITY_DEFAULT = 0.4
 const OPACITY_HOVER = 0.55
 
+/** Below this, the lerp has visually converged and the loop can idle. */
+const SETTLE_EPSILON = 0.01
+
 function subscribePointerMode(onChange: () => void) {
   if (typeof window === 'undefined') return () => {}
   const fine = window.matchMedia('(pointer: fine)')
@@ -34,15 +37,14 @@ function getServerSnapshot() {
   return false
 }
 
-function isInteractiveTarget(node: Element | null): boolean {
-  if (!node) return false
+function isInteractiveTarget(node: EventTarget | null): boolean {
+  if (!(node instanceof Element)) return false
   if (node.closest('[data-cursor="pointer"]')) return true
-  const el = node instanceof Element ? node : null
-  if (!el) return false
-  const closest = el.closest(
-    'a[href], button, [role="button"], input[type="submit"], input[type="button"]',
+  return Boolean(
+    node.closest(
+      'a[href], button, [role="button"], input[type="submit"], input[type="button"]',
+    ),
   )
-  return Boolean(closest)
 }
 
 export function Cursor() {
@@ -52,6 +54,7 @@ export function Cursor() {
     getServerSnapshot,
   )
 
+  const dotRef = useRef<HTMLDivElement>(null)
   const targetRef = useRef({ x: 0, y: 0 })
   const posRef = useRef({ x: 0, y: 0 })
   const sizeTargetRef = useRef(SIZE_DEFAULT)
@@ -59,53 +62,82 @@ export function Cursor() {
   const opacityTargetRef = useRef(OPACITY_DEFAULT)
   const opacityRef = useRef(OPACITY_DEFAULT)
   const rafRef = useRef<number>(0)
+  const runningRef = useRef(false)
 
   useEffect(() => {
     if (!active) return
 
-    const onMove = (e: MouseEvent) => {
-      targetRef.current.x = e.clientX
-      targetRef.current.y = e.clientY
-
-      const top = document.elementFromPoint(e.clientX, e.clientY)
-      const hover = isInteractiveTarget(top)
-      sizeTargetRef.current = hover ? SIZE_HOVER : SIZE_DEFAULT
-      opacityTargetRef.current = hover ? OPACITY_HOVER : OPACITY_DEFAULT
-    }
-
-    window.addEventListener('mousemove', onMove, { passive: true })
-
-    const prevCursor = document.body.style.cursor
-    document.body.style.cursor = 'none'
+    const el = dotRef.current
+    if (!el) return
 
     function tick() {
       const target = targetRef.current
       const p = posRef.current
+
       p.x += (target.x - p.x) * LERP
       p.y += (target.y - p.y) * LERP
+      sizeRef.current += (sizeTargetRef.current - sizeRef.current) * LERP
+      opacityRef.current += (opacityTargetRef.current - opacityRef.current) * LERP
 
-      sizeRef.current +=
-        (sizeTargetRef.current - sizeRef.current) * LERP
-      opacityRef.current +=
-        (opacityTargetRef.current - opacityRef.current) * LERP
+      const half = SIZE_DEFAULT / 2
+      const scale = sizeRef.current / SIZE_DEFAULT
 
-      const el = document.getElementById('skyluxxe-custom-cursor')
-      if (el) {
-        const half = sizeRef.current / 2
-        el.style.transform = `translate3d(${p.x - half}px, ${p.y - half}px, 0)`
-        el.style.width = `${sizeRef.current}px`
-        el.style.height = `${sizeRef.current}px`
-        el.style.opacity = String(opacityRef.current)
+      // Transform + opacity only. Writing width/height here forced a layout on
+      // every frame; scaling a fixed-size dot stays on the compositor.
+      el!.style.transform = `translate3d(${p.x - half}px, ${p.y - half}px, 0) scale(${scale})`
+      el!.style.opacity = String(opacityRef.current)
+
+      const settled =
+        Math.abs(target.x - p.x) < SETTLE_EPSILON &&
+        Math.abs(target.y - p.y) < SETTLE_EPSILON &&
+        Math.abs(sizeTargetRef.current - sizeRef.current) < SETTLE_EPSILON &&
+        Math.abs(opacityTargetRef.current - opacityRef.current) < SETTLE_EPSILON
+
+      if (settled) {
+        // Park the loop once everything has caught up, rather than burning a
+        // frame forever while the pointer sits still.
+        runningRef.current = false
+        return
       }
 
       rafRef.current = window.requestAnimationFrame(tick)
     }
 
-    rafRef.current = window.requestAnimationFrame(tick)
+    function wake() {
+      if (runningRef.current) return
+      runningRef.current = true
+      rafRef.current = window.requestAnimationFrame(tick)
+    }
+
+    const onMove = (e: MouseEvent) => {
+      targetRef.current.x = e.clientX
+      targetRef.current.y = e.clientY
+      wake()
+    }
+
+    // `pointerover` fires only when the pointer crosses into a different
+    // element, so hover state costs one closest() per boundary instead of an
+    // elementFromPoint() hit-test on every single mousemove.
+    const onOver = (e: PointerEvent) => {
+      const hover = isInteractiveTarget(e.target)
+      sizeTargetRef.current = hover ? SIZE_HOVER : SIZE_DEFAULT
+      opacityTargetRef.current = hover ? OPACITY_HOVER : OPACITY_DEFAULT
+      wake()
+    }
+
+    window.addEventListener('mousemove', onMove, { passive: true })
+    document.addEventListener('pointerover', onOver, { passive: true })
+
+    const prevCursor = document.body.style.cursor
+    document.body.style.cursor = 'none'
+
+    wake()
 
     return () => {
       window.removeEventListener('mousemove', onMove)
+      document.removeEventListener('pointerover', onOver)
       window.cancelAnimationFrame(rafRef.current)
+      runningRef.current = false
       document.body.style.cursor = prevCursor
     }
   }, [active])
@@ -114,7 +146,7 @@ export function Cursor() {
 
   return (
     <div
-      id="skyluxxe-custom-cursor"
+      ref={dotRef}
       aria-hidden
       style={{
         position: 'fixed',
@@ -128,6 +160,7 @@ export function Cursor() {
         pointerEvents: 'none',
         zIndex: 99999,
         transform: 'translate3d(0, 0, 0)',
+        willChange: 'transform, opacity',
       }}
     />
   )

@@ -157,6 +157,8 @@ export function ReachCoverageGlobe() {
   const [reduceMotion, setReduceMotion] = useState(false);
   const [webglOk, setWebglOk] = useState(true);
   const [preferStatic, setPreferStatic] = useState(false);
+  const [onScreen, setOnScreen] = useState(false);
+  const stageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -175,6 +177,19 @@ export function ReachCoverageGlobe() {
     };
   }, []);
 
+  // Keep the globe's render loop off while it is scrolled away.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setOnScreen(entry.isIntersecting),
+      { rootMargin: "150px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [reduceMotion, preferStatic, webglOk]);
+
   if (reduceMotion || preferStatic) {
     return <ReducedMotionFallback />;
   }
@@ -184,8 +199,12 @@ export function ReachCoverageGlobe() {
   }
 
   return (
-    <div className="relative h-[min(70vh,520px)] w-full md:h-[min(72vh,580px)]">
+    <div
+      ref={stageRef}
+      className="relative h-[min(70vh,520px)] w-full md:h-[min(72vh,580px)]"
+    >
       <Canvas
+        frameloop={onScreen ? "always" : "never"}
         camera={{ position: [0, 0.35, 3.6], fov: 42 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: true }}

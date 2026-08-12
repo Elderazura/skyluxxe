@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import {
@@ -60,9 +61,17 @@ export function Hero() {
     };
   }, [reduced]);
 
+  const ctaVariants = useMemo((): Variants => {
+    if (reduced) return { hidden: { opacity: 1, y: 0 }, visible: { opacity: 1, y: 0 } };
+    return {
+      hidden: fadeInUp.hidden,
+      visible: { opacity: 1, y: 0, transition: { duration: DURATION_MEDIUM, ease: EASE_OUT_EXPO, delay: 2 } },
+    };
+  }, [reduced]);
+
   return (
     <section
-      className="relative flex min-h-[100svh] min-h-[100vh] flex-col justify-end bg-[#0D1B2A]"
+      className="relative flex min-h-[100svh] flex-col justify-end bg-[#0D1B2A]"
       aria-label="Skyluxxe concierge travel"
     >
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -98,9 +107,31 @@ export function Hero() {
           }}
           aria-hidden
         />
+        {/* The navigation sits over whatever the video is showing; the jet
+            cabin footage is bright enough at the top that the links lost
+            contrast against it. */}
+        <div
+          className="absolute inset-x-0 top-0 h-40"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(13,27,42,0.55) 0%, rgba(13,27,42,0.25) 55%, transparent 100%)",
+          }}
+          aria-hidden
+        />
       </div>
 
-      <div className="relative z-[1] w-full min-w-0 px-[var(--gutter-x)] pb-[clamp(3rem,8vh,6rem)] pt-[60vh]">
+      {/*
+        The bottom inset folds in the cookie banner's measured height (see
+        components/ui/CookieConsent.tsx). Without it the banner overlapped the
+        wordmark and buried the tagline on a first visit at 1280x720.
+      */}
+      <div
+        className="relative z-[1] w-full min-w-0 px-[var(--gutter-x)] pt-[clamp(4rem,18vh,10rem)]"
+        style={{
+          paddingBottom:
+            "calc(clamp(3rem, 8vh, 6rem) + var(--consent-height, 0px))",
+        }}
+      >
         <motion.span
           className="mb-6 block font-[family-name:var(--font-body)] text-xs uppercase tracking-[0.18em] text-white/60"
           initial={reduced ? false : "hidden"}
@@ -144,6 +175,28 @@ export function Hero() {
         >
           The Art of Invisible Service.
         </motion.p>
+
+        {/* The homepage previously offered no way to act until several
+            viewports of scrolling had passed. */}
+        <motion.div
+          className="mt-8"
+          initial={reduced ? false : "hidden"}
+          animate="visible"
+          variants={ctaVariants}
+        >
+          <Link
+            href="/enquiry"
+            className="group inline-flex min-h-[44px] items-center border border-white/30 px-7 font-[family-name:var(--font-body)] text-xs uppercase tracking-[0.16em] text-white transition-colors duration-500 hover:border-[#DFA293] hover:bg-[#DFA293] hover:text-[#0D1B2A]"
+          >
+            Begin an enquiry
+            <span
+              className="ml-3 transition-transform duration-500 group-hover:translate-x-1"
+              aria-hidden
+            >
+              &rarr;
+            </span>
+          </Link>
+        </motion.div>
       </div>
 
       <div

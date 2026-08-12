@@ -33,8 +33,11 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
     }
 
     const instance = new Lenis({
-      lerp: 0.08,
-      duration: 1.2,
+      // Lenis defaults to 0.1. At 0.08 the viewport kept coasting well after
+      // the wheel stopped, which read as lag rather than smoothness — the more
+      // so once GSAP's scrub and the CSS `scroll-behavior` piled on top.
+      // `duration` is ignored whenever `lerp` is set, so it is not passed.
+      lerp: 0.12,
       smoothWheel: true,
     })
 

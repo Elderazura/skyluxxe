@@ -1,13 +1,9 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { brand } from "@/content/brand";
-
-const MonogramScene = dynamic(
-  () => import("@/components/ui/MonogramScene").then((mod) => ({ default: mod.MonogramScene })),
-  { ssr: false },
-);
+import { logos } from "@/content/images";
 
 export function OpeningStatement() {
   return (
@@ -25,17 +21,26 @@ export function OpeningStatement() {
         aria-hidden
       />
 
+      {/*
+        Decorative watermark. This used to be a full WebGL MonogramScene — its
+        own GL context, a 2.8MB GLB and an environment map — rendered at 8%
+        opacity behind the text and hidden from assistive tech. A 9KB still
+        image is indistinguishable at this opacity.
+      */}
       <div
         className="pointer-events-none absolute inset-0 z-[1] flex items-center justify-center"
         aria-hidden="true"
       >
-        <MonogramScene
-          className="h-[min(80vw,350px)] w-[min(80vw,350px)] md:h-[500px] md:w-[500px]"
-          autoRotate
-          rotationSpeed={0.12}
-          scale={2}
-          opacity={0.08}
-        />
+        <div className="relative h-[min(80vw,350px)] w-[min(80vw,350px)] md:h-[500px] md:w-[500px]">
+          <Image
+            src={logos.monogramRoseGold}
+            alt=""
+            fill
+            className="object-contain"
+            style={{ opacity: 0.08 }}
+            sizes="(max-width: 767px) 80vw, 500px"
+          />
+        </div>
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-[900px] flex-col items-stretch text-center">

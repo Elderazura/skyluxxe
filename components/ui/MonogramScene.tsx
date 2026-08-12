@@ -1,9 +1,10 @@
 "use client";
 
-import { Suspense, useRef, useMemo, useEffect } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Center, Environment } from "@react-three/drei";
+import { Suspense, useRef, useMemo, useEffect, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useGLTF, Center } from "@react-three/drei";
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import type { Group } from "three";
 
 const MODEL_PATH = "/logos/monogram-3d.glb";
@@ -17,6 +18,35 @@ const IDLE_BLEND_RATE = 0.008;
 const DRAG_SENSITIVITY = 0.006;
 const VELOCITY_SAMPLES = 5;
 const MIN_VELOCITY_THRESHOLD = 0.0008;
+
+/**
+ * Builds the reflection environment locally, once per renderer.
+ *
+ * This replaces drei's `<Environment preset="studio" />`, which downloads
+ * `studio_small_03_1k.hdr` from `raw.githack.com` at runtime — a third-party
+ * host sitting in the render path of a page we otherwise serve entirely
+ * ourselves. RoomEnvironment ships with three, renders once to a cubemap, and
+ * gives the metal a comparable studio falloff with no network request.
+ *
+ * The texture is handed to the materials rather than assigned to
+ * `scene.environment`, so nothing reaches into state owned by a hook.
+ */
+function useLocalEnvMap(): THREE.Texture {
+  const gl = useThree((s) => s.gl);
+
+  const envMap = useMemo(() => {
+    const pmrem = new THREE.PMREMGenerator(gl);
+    const room = new RoomEnvironment();
+    const target = pmrem.fromScene(room, 0.04);
+    room.dispose();
+    pmrem.dispose();
+    return target.texture;
+  }, [gl]);
+
+  useEffect(() => () => envMap.dispose(), [envMap]);
+
+  return envMap;
+}
 
 type PhysicsState = {
   velocity: number;
@@ -44,6 +74,7 @@ function MonogramModel({
 }: MonogramModelProps) {
   const groupRef = useRef<Group>(null);
   const { scene } = useGLTF(MODEL_PATH);
+  const envMap = useLocalEnvMap();
 
   const clonedScene = useMemo(() => {
     const clone = scene.clone(true);
@@ -58,7 +89,11 @@ function MonogramModel({
           roughness: 0.18,
           clearcoat: 0.4,
           clearcoatRoughness: 0.08,
-          envMapIntensity: 1.5,
+          envMap,
+          // Previously the scene carried environmentIntensity 0.5 alongside a
+          // material envMapIntensity of 1.5; 0.75 keeps the same net strength
+          // now that the map is applied per-material.
+          envMapIntensity: 0.75,
           emissive: ROSE_GOLD_DARK,
           emissiveIntensity: 0.08,
           side: THREE.DoubleSide,
@@ -66,7 +101,7 @@ function MonogramModel({
       }
     });
     return clone;
-  }, [scene]);
+  }, [scene, envMap]);
 
   useFrame((_, delta) => {
     if (!groupRef.current) return;
@@ -125,6 +160,7 @@ export function MonogramScene({
   interactive = false,
 }: MonogramSceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [onScreen, setOnScreen] = useState(false);
   const physicsRef = useRef<PhysicsState>({
     velocity: 0,
     dragging: false,
@@ -133,6 +169,20 @@ export function MonogramScene({
     idleBlend: 0,
     pendingDelta: 0,
   });
+
+  // R3F renders continuously by default. Without this the monogram kept a full
+  // WebGL render loop running while it was scrolled well off screen.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setOnScreen(entry.isIntersecting),
+      { rootMargin: "150px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!interactive) return;
@@ -213,6 +263,7 @@ export function MonogramScene({
       style={{ opacity, touchAction: interactive ? "none" : "auto" }}
     >
       <Canvas
+        frameloop={onScreen ? "always" : "never"}
         camera={{ position: [0, 0, 6], fov: 50 }}
         gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.2 }}
         dpr={[1, 2]}
@@ -229,7 +280,6 @@ export function MonogramScene({
             angle={0.4}
             penumbra={0.5}
           />
-          <Environment preset="studio" environmentIntensity={0.5} />
           <MonogramModel
             autoRotate={interactive ? false : autoRotate}
             rotationSpeed={rotationSpeed}

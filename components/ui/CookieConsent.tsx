@@ -1,14 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { brand } from "@/content/brand";
 
 const STORAGE_KEY = "skyluxxe-cookie-consent";
 
+/**
+ * Published to the document so full-height sections can keep their content
+ * clear of the banner. The hero used to sit flush against the bottom of the
+ * viewport, and on a 1280x720 laptop this bar cut through the wordmark and hid
+ * the tagline entirely on a first visit.
+ */
+const HEIGHT_VAR = "--consent-height";
+
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -18,6 +27,33 @@ export function CookieConsent() {
       setVisible(true);
     }
   }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    if (!visible) {
+      root.style.removeProperty(HEIGHT_VAR);
+      return;
+    }
+
+    const el = panelRef.current;
+    if (!el) return;
+
+    const publish = () => {
+      root.style.setProperty(HEIGHT_VAR, `${Math.ceil(el.getBoundingClientRect().height)}px`);
+    };
+
+    publish();
+
+    // The banner reflows between one and three lines across breakpoints.
+    const observer = new ResizeObserver(publish);
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty(HEIGHT_VAR);
+    };
+  }, [visible]);
 
   const accept = () => {
     try {
@@ -35,10 +71,11 @@ export function CookieConsent() {
 
   return (
     <div
+      ref={panelRef}
       role="dialog"
       aria-labelledby="cookie-consent-heading"
       aria-describedby="cookie-consent-desc"
-      className="fixed inset-x-0 bottom-0 z-[100] border-t border-white/[0.08] px-[var(--gutter-x)] py-5 shadow-[0_-12px_40px_rgba(0,0,0,0.35)] md:py-6"
+      className="fixed inset-x-0 bottom-0 z-[100] border-t border-white/[0.08] px-[var(--gutter-x)] py-4 shadow-[0_-12px_40px_rgba(0,0,0,0.35)] md:py-5"
       style={{ backgroundColor: brand.colors.deepNavy }}
     >
       <div className="mx-auto flex max-w-[var(--container-max)] flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-8">

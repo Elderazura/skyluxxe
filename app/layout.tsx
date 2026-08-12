@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { logos } from "@/content/images";
 import { Navigation } from "@/components/ui/Navigation";
 import { Footer } from "@/components/ui/Footer";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
@@ -113,11 +112,13 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: logos.monogramRoseGold,
-    shortcut: logos.monogramRoseGold,
-    apple: logos.monogramRoseGold,
-  },
+  /*
+   * No `icons` block: app/favicon.ico, app/icon.png and app/apple-icon.png are
+   * picked up by Next's file conventions, and those files carry the monogram
+   * trimmed to a square on brand navy. Declaring icons here as well emitted a
+   * second, competing set of links pointing at the untrimmed logo, which sat in
+   * a tall transparent canvas and rendered as a speck at 16px.
+   */
 };
 
 export const viewport: Viewport = {
