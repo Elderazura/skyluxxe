@@ -3,7 +3,6 @@ import { services } from "@/content/services";
 import {
   SITE_URL,
   absoluteUrl,
-  siteFaqs,
   siteSummary,
 } from "@/content/site-discovery";
 
@@ -32,7 +31,7 @@ export function getSiteJsonLdGraph(): Record<string, unknown>[] {
       "@type": "TravelAgency",
       "@id": ORG_ID,
       name: brand.office.name,
-      legalName: "SKYLUXXE CONCIERGE TRAVEL - L.L.C - S.P.C",
+      legalName: brand.legal.entityName,
       url: SITE_URL,
       email: brand.contact.email,
       telephone: brand.contact.phoneTel,
@@ -82,18 +81,12 @@ export function getSiteJsonLdGraph(): Record<string, unknown>[] {
         })),
       },
     },
-    {
-      "@type": "FAQPage",
-      "@id": `${SITE_URL}/#faq`,
-      mainEntity: siteFaqs.map((faq) => ({
-        "@type": "Question",
-        name: faq.question,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: faq.answer,
-        },
-      })),
-    },
+    /*
+     * No FAQPage node. Search engines require FAQ markup to describe questions
+     * and answers that are visible on the page it is attached to; this used to
+     * be emitted site-wide with no FAQ shown anywhere. The same Q&A remains
+     * available to AI crawlers through /llms.txt.
+     */
   ];
 }
 

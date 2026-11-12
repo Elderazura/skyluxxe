@@ -26,6 +26,8 @@ export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const ticking = useRef(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const check = () => {
@@ -53,9 +55,70 @@ export function Navigation() {
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const toggleMenu = useCallback(() => setMenuOpen((o) => !o), []);
 
+  /*
+   * While the mobile menu is open: Escape closes it and returns focus to the
+   * toggle, and Tab cycles through the header controls and the menu links
+   * instead of wandering into the page hidden behind the overlay.
+   */
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const focusables = () => {
+      const header = Array.from(
+        headerRef.current?.querySelectorAll<HTMLElement>("a[href], button") ?? [],
+      ).filter((el) => el.offsetParent !== null);
+      const menu = Array.from(
+        document.querySelectorAll<HTMLElement>("#mobile-menu a[href], #mobile-menu button"),
+      );
+      return [...header, ...menu];
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setMenuOpen(false);
+        toggleRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+
+      if (!active || !items.includes(active)) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    // The menu is mobile-only; if the viewport grows past the breakpoint the
+    // toggle disappears, so close rather than strand an overlay with no exit.
+    const desktop = window.matchMedia("(min-width: 768px)");
+    const onBreakpoint = () => {
+      if (desktop.matches) setMenuOpen(false);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    desktop.addEventListener("change", onBreakpoint);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      desktop.removeEventListener("change", onBreakpoint);
+    };
+  }, [menuOpen]);
+
   return (
     <>
       <header
+        ref={headerRef}
         className={[
           "fixed top-0 right-0 left-0 z-50 transition-[padding,background-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
           scrolled ? "bg-[#0D1B2A]/95 py-5 backdrop-blur-md" : "bg-transparent py-8",
@@ -86,6 +149,7 @@ export function Navigation() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={active ? "page" : undefined}
                   className="group font-[family-name:var(--font-serif)] text-[15px] font-normal tracking-[0.06em] text-[#F5F0EB] transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
                 >
                   <span className="relative inline-block pb-1">
@@ -104,6 +168,7 @@ export function Navigation() {
           </nav>
 
           <button
+            ref={toggleRef}
             type="button"
             className="relative flex h-11 w-11 items-center justify-center md:hidden"
             onClick={toggleMenu}
@@ -111,7 +176,6 @@ export function Navigation() {
             aria-controls="mobile-menu"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
-            <span className="sr-only">{menuOpen ? "Close menu" : "Menu"}</span>
             <span className="flex h-3 w-5 flex-col justify-between">
               <span
                 className={[

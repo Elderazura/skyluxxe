@@ -1,19 +1,69 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Component, useEffect, useRef, useState, type ReactNode } from "react";
+import Image from "next/image";
 import { useScroll, useTransform, motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { brand } from "@/content/brand";
+import { logos } from "@/content/images";
 
 const MonogramScene = dynamic(
   () => import("@/components/ui/MonogramScene").then((mod) => ({ default: mod.MonogramScene })),
   { ssr: false },
 );
 
+/**
+ * WebGL can be unavailable (blocked, lost context, old GPU) and the model can
+ * fail to download. Either used to throw out of the canvas and take the whole
+ * home page down with it; now the flat monogram stands in.
+ */
+class SceneBoundary extends Component<
+  { fallback: ReactNode; onFail: () => void; children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch() {
+    this.props.onFail();
+  }
+
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
+
+function webglAvailable(): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    return Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
+
+function FlatMonogram() {
+  return (
+    <div className="relative h-full w-full">
+      <Image
+        src={logos.monogramRoseGold}
+        alt="Skyluxxe monogram"
+        fill
+        className="object-contain p-[18%]"
+        sizes="(max-width: 767px) 60vw, 520px"
+      />
+    </div>
+  );
+}
+
 export function MonogramScroll() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const [nearViewport, setNearViewport] = useState(false);
+  const [sceneMode, setSceneMode] = useState<"pending" | "3d" | "flat">("pending");
 
   /*
    * This section sits roughly 19,000px down the homepage, but `dynamic()` fires
@@ -30,6 +80,7 @@ export function MonogramScroll() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setNearViewport(true);
+          setSceneMode(webglAvailable() ? "3d" : "flat");
           observer.disconnect();
         }
       },
@@ -86,17 +137,21 @@ export function MonogramScroll() {
           className="relative z-10 h-[60vw] w-[60vw] max-h-[520px] max-w-[520px] md:h-[50vh] md:w-[50vh] md:max-h-[600px] md:max-w-[600px]"
           style={{ opacity, scale }}
         >
-          {nearViewport && (
-            <MonogramScene className="h-full w-full" interactive scale={2} />
-          )}
+          {nearViewport && sceneMode === "3d" ? (
+            <SceneBoundary fallback={<FlatMonogram />} onFail={() => setSceneMode("flat")}>
+              <MonogramScene className="h-full w-full" interactive scale={2} />
+            </SceneBoundary>
+          ) : null}
+          {sceneMode === "flat" ? <FlatMonogram /> : null}
         </motion.div>
 
-        <motion.p
-          className="relative z-10 mt-8 select-none font-[family-name:var(--font-body)] text-[11px] font-normal uppercase tracking-[0.14em] md:text-xs"
+        {/* Only promise interaction when the 3D model is actually there. */}
+        <p
+          className="relative z-10 mt-8 min-h-[1.25rem] select-none font-[family-name:var(--font-body)] text-[11px] font-normal uppercase tracking-[0.14em] md:text-xs"
           style={{ color: brand.colors.mutedBlue, opacity: 0.55 }}
         >
-          Drag or swipe to rotate
-        </motion.p>
+          {sceneMode === "3d" ? "Drag or swipe to rotate" : ""}
+        </p>
 
         <div
           className="pointer-events-none absolute top-1/2 left-1/2 -z-0 -translate-x-1/2 -translate-y-1/2"

@@ -16,8 +16,8 @@ const BANNERS = [
     href: "/reach",
     title: "Everywhere distinction matters",
     subtitle: "Our network spans capitals, coasts, and retreats — anchored in Abu Dhabi.",
-    imageSrc: lifestyleImages.jetSunsetAerial,
-    imageAlt: "Aircraft above clouds at sunset.",
+    imageSrc: lifestyleImages.yachtSunset,
+    imageAlt: "A couple on a yacht deck watching the sun set over the coast.",
   },
 ] as const;
 

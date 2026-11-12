@@ -60,11 +60,10 @@ export function InlineCta({
         <motion.div variants={fadeInUp} className="mt-8 flex justify-center">
           <Link
             href={href}
-            className="group relative inline-flex min-h-[44px] items-center justify-center overflow-hidden border bg-transparent px-9 py-3 font-[family-name:var(--font-body)] text-[13px] font-normal uppercase tracking-[0.1em] transition-[color] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] before:absolute before:inset-0 before:z-0 before:origin-left before:scale-x-0 before:transition-transform before:duration-[600ms] before:ease-[cubic-bezier(0.22,1,0.36,1)] before:content-[''] hover:before:scale-x-100 md:py-3.5"
+            className="group relative inline-flex min-h-[44px] items-center justify-center overflow-hidden border bg-transparent px-9 py-3 font-[family-name:var(--font-body)] text-[13px] font-normal uppercase tracking-[0.1em] transition-[color] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] before:absolute before:inset-0 before:z-0 before:origin-left before:scale-x-0 before:transition-transform before:duration-[600ms] before:ease-[cubic-bezier(0.22,1,0.36,1)] before:bg-[#DFA293] before:content-[''] hover:before:scale-x-100 md:py-3.5"
             style={{
               borderColor: brand.colors.roseGold,
               color: isIvory ? brand.colors.navy : brand.colors.offWhite,
-              ["--tw-before-bg" as string]: brand.colors.roseGold,
             }}
           >
             <span className="relative z-10 transition-colors duration-[600ms] group-hover:text-[#0D1B2A]">

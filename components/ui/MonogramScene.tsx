@@ -260,7 +260,9 @@ export function MonogramScene({
     <div
       ref={containerRef}
       className={className}
-      style={{ opacity, touchAction: interactive ? "none" : "auto" }}
+      // pan-y: a horizontal drag turns the monogram, a vertical swipe still
+      // scrolls the page. "none" trapped phone users on this section.
+      style={{ opacity, touchAction: interactive ? "pan-y" : "auto" }}
     >
       <Canvas
         frameloop={onScreen ? "always" : "never"}

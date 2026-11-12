@@ -1,82 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import * as THREE from "three";
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 import { brand } from "@/content/brand";
-
-function latLngToVector3(lat: number, lng: number, radius: number) {
-  const phi = (90 - lat) * (Math.PI / 180);
-  const theta = (lng + 180) * (Math.PI / 180);
-  return new THREE.Vector3(
-    -radius * Math.sin(phi) * Math.cos(theta),
-    radius * Math.cos(phi),
-    radius * Math.sin(phi) * Math.sin(theta),
-  );
-}
-
-const HUBS: { lat: number; lng: number; hub: boolean }[] = [
-  { lat: 24.4539, lng: 54.3773, hub: true },
-  { lat: 25.2048, lng: 55.2708, hub: false },
-  { lat: 51.5074, lng: -0.1278, hub: false },
-  { lat: 48.8566, lng: 2.3522, hub: false },
-  { lat: 40.7128, lng: -74.006, hub: false },
-  { lat: 35.6762, lng: 139.6503, hub: false },
-  { lat: 1.3521, lng: 103.8198, hub: false },
-  { lat: -33.8688, lng: 151.2093, hub: false },
-];
-
-const GLOBE_RADIUS = 1.35;
-
-function GlobeScene() {
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame((_, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.12;
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      <mesh>
-        <sphereGeometry args={[GLOBE_RADIUS, 64, 64]} />
-        <meshStandardMaterial
-          color={brand.colors.navy}
-          metalness={0.35}
-          roughness={0.65}
-        />
-      </mesh>
-      {HUBS.map((h, i) => {
-        const pos = latLngToVector3(h.lat, h.lng, GLOBE_RADIUS + 0.04);
-        return (
-          <mesh key={i} position={pos}>
-            <sphereGeometry args={[h.hub ? 0.055 : 0.035, 16, 16]} />
-            <meshStandardMaterial
-              color={h.hub ? brand.colors.roseGold : brand.colors.mutedBlue}
-              emissive={h.hub ? brand.colors.roseGold : "#000000"}
-              emissiveIntensity={h.hub ? 0.45 : 0}
-              metalness={0.2}
-              roughness={0.4}
-            />
-          </mesh>
-        );
-      })}
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[4, 2.5, 3]} intensity={1.35} color="#FAF7F4" />
-      <directionalLight position={[-3, -1, -2]} intensity={0.35} color={brand.colors.mutedBlue} />
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        autoRotate={false}
-        minPolarAngle={Math.PI / 2.65}
-        maxPolarAngle={Math.PI / 2.05}
-      />
-    </group>
-  );
-}
 
 function ReducedMotionFallback() {
   return (
@@ -102,8 +29,8 @@ function ReducedMotionFallback() {
         className="mt-4 max-w-md font-[family-name:var(--font-body)] text-sm font-light leading-relaxed md:text-base"
         style={{ color: brand.colors.mutedBlue }}
       >
-        A single desk coordinates partners across regions — the map above illustrates key
-        touchpoints; your itinerary may extend far beyond.
+        A single desk coordinates partners across regions — these are key touchpoints; your
+        itinerary may extend far beyond.
       </p>
     </div>
   );
@@ -141,46 +68,55 @@ function StaticGlobeFallback() {
   );
 }
 
-function detectWebGL(): boolean {
-  if (typeof window === "undefined") return true;
-  try {
-    const canvas = document.createElement("canvas");
-    return !!(
-      canvas.getContext("webgl") ?? canvas.getContext("experimental-webgl")
-    );
-  } catch {
-    return false;
+/*
+ * three.js, fiber and drei are only fetched when the interactive globe will
+ * really be shown. Imported statically, they shipped to every phone and every
+ * reduced-motion visitor, who only ever see the text version.
+ */
+const ReachGlobeCanvas = dynamic(
+  () => import("./ReachGlobeCanvas").then((mod) => ({ default: mod.ReachGlobeCanvas })),
+  { ssr: false, loading: () => null },
+);
+
+type GlobeMode = "text" | "static" | "3d";
+
+const TEXT_QUERY = "(prefers-reduced-motion: reduce), (max-width: 767px)";
+
+function subscribeMode(onChange: () => void) {
+  const mq = window.matchMedia(TEXT_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
+let webglSupport: boolean | null = null;
+function hasWebGL(): boolean {
+  if (webglSupport === null) {
+    try {
+      const canvas = document.createElement("canvas");
+      webglSupport = Boolean(canvas.getContext("webgl2") ?? canvas.getContext("webgl"));
+    } catch {
+      webglSupport = false;
+    }
   }
+  return webglSupport;
+}
+
+function getMode(): GlobeMode {
+  if (window.matchMedia(TEXT_QUERY).matches) return "text";
+  return hasWebGL() ? "3d" : "static";
 }
 
 export function ReachCoverageGlobe() {
-  const [reduceMotion, setReduceMotion] = useState(false);
-  const [webglOk, setWebglOk] = useState(true);
-  const [preferStatic, setPreferStatic] = useState(false);
+  // Server and first client render agree on the text version; the globe is an
+  // enhancement that replaces it once the device is known to suit it.
+  const mode = useSyncExternalStore(subscribeMode, getMode, (): GlobeMode => "text");
   const [onScreen, setOnScreen] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const mobileMq = window.matchMedia("(max-width: 767px)");
-    const update = () => {
-      setReduceMotion(mq.matches);
-      setPreferStatic(mobileMq.matches);
-    };
-    update();
-    mq.addEventListener("change", update);
-    mobileMq.addEventListener("change", update);
-    setWebglOk(detectWebGL());
-    return () => {
-      mq.removeEventListener("change", update);
-      mobileMq.removeEventListener("change", update);
-    };
-  }, []);
 
   // Keep the globe's render loop off while it is scrolled away.
   useEffect(() => {
     const el = stageRef.current;
-    if (!el) return;
+    if (mode !== "3d" || !el) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => setOnScreen(entry.isIntersecting),
@@ -188,30 +124,17 @@ export function ReachCoverageGlobe() {
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [reduceMotion, preferStatic, webglOk]);
+  }, [mode]);
 
-  if (reduceMotion || preferStatic) {
-    return <ReducedMotionFallback />;
-  }
-
-  if (!webglOk) {
-    return <StaticGlobeFallback />;
-  }
+  if (mode === "text") return <ReducedMotionFallback />;
+  if (mode === "static") return <StaticGlobeFallback />;
 
   return (
     <div
       ref={stageRef}
       className="relative h-[min(70vh,520px)] w-full md:h-[min(72vh,580px)]"
     >
-      <Canvas
-        frameloop={onScreen ? "always" : "never"}
-        camera={{ position: [0, 0.35, 3.6], fov: 42 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: "transparent" }}
-      >
-        <GlobeScene />
-      </Canvas>
+      <ReachGlobeCanvas onScreen={onScreen} />
       <p className="pointer-events-none absolute bottom-4 left-1/2 max-w-[90%] -translate-x-1/2 text-center font-[family-name:var(--font-body)] text-[11px] font-light uppercase tracking-[0.14em] text-white/35 md:bottom-6">
         Abu Dhabi hub · global touchpoints · illustrative
       </p>

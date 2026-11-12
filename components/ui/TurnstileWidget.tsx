@@ -30,32 +30,37 @@ declare global {
         },
       ) => string;
       reset: (widgetId?: string) => void;
+      remove: (widgetId?: string) => void;
       getResponse: (widgetId?: string) => string | undefined;
     };
   }
 }
 
+let scriptPromise: Promise<void> | null = null;
+
 function loadTurnstileScript(): Promise<void> {
   if (typeof window === "undefined") return Promise.resolve();
   if (window.turnstile) return Promise.resolve();
+  if (scriptPromise) return scriptPromise;
 
-  const existing = document.getElementById(SCRIPT_ID);
-  if (existing) {
-    return new Promise((resolve) => {
-      existing.addEventListener("load", () => resolve(), { once: true });
-    });
-  }
-
-  return new Promise((resolve, reject) => {
+  scriptPromise = new Promise<void>((resolve, reject) => {
+    document.getElementById(SCRIPT_ID)?.remove();
     const script = document.createElement("script");
     script.id = SCRIPT_ID;
     script.src = SCRIPT_SRC;
     script.async = true;
     script.defer = true;
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Turnstile script failed to load"));
+    script.onerror = () => {
+      // Allow a later mount to try again instead of caching the failure.
+      scriptPromise = null;
+      script.remove();
+      reject(new Error("Turnstile script failed to load"));
+    };
     document.head.appendChild(script);
   });
+
+  return scriptPromise;
 }
 
 export const TurnstileWidget = forwardRef<TurnstileWidgetHandle, TurnstileWidgetProps>(
@@ -63,6 +68,18 @@ export const TurnstileWidget = forwardRef<TurnstileWidgetHandle, TurnstileWidget
     const containerRef = useRef<HTMLDivElement>(null);
     const widgetIdRef = useRef<string | null>(null);
     const tokenRef = useRef<string | null>(null);
+
+    /*
+     * Callbacks live in refs so a parent re-render (which hands us new inline
+     * arrows) does not re-run the effect and render a second widget into the
+     * same container.
+     */
+    const onReadyRef = useRef(onReady);
+    const onErrorRef = useRef(onError);
+    useEffect(() => {
+      onReadyRef.current = onReady;
+      onErrorRef.current = onError;
+    });
 
     const reset = useCallback(() => {
       tokenRef.current = null;
@@ -82,8 +99,7 @@ export const TurnstileWidget = forwardRef<TurnstileWidgetHandle, TurnstileWidget
 
     useEffect(() => {
       let cancelled = false;
-      const container = containerRef.current;
-      if (!container || !siteKey) return;
+      if (!containerRef.current || !siteKey) return;
 
       loadTurnstileScript()
         .then(() => {
@@ -93,24 +109,35 @@ export const TurnstileWidget = forwardRef<TurnstileWidgetHandle, TurnstileWidget
             theme: "dark",
             callback: (token) => {
               tokenRef.current = token;
-              onReady?.();
+              onReadyRef.current?.();
             },
             "error-callback": () => {
               tokenRef.current = null;
-              onError?.();
+              onErrorRef.current?.();
             },
             "expired-callback": () => {
               tokenRef.current = null;
             },
           });
         })
-        .catch(() => onError?.());
+        .catch(() => {
+          if (!cancelled) onErrorRef.current?.();
+        });
 
       return () => {
         cancelled = true;
+        if (widgetIdRef.current && window.turnstile) {
+          try {
+            window.turnstile.remove(widgetIdRef.current);
+          } catch {
+            /* widget already gone */
+          }
+        }
+        widgetIdRef.current = null;
+        tokenRef.current = null;
       };
-    }, [siteKey, onReady, onError]);
+    }, [siteKey]);
 
-    return <div ref={containerRef} className="min-h-[65px]" aria-label="Security verification" />;
+    return <div ref={containerRef} className="min-h-[65px]" />;
   },
 );

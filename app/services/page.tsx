@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/page-metadata";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -16,11 +18,12 @@ import { brand } from "@/content/brand";
 import { crossLinkExplore } from "@/content/crossLinks";
 import { serviceImages } from "@/content/images";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/services",
   title: "Our Services",
   description:
     "Eleven disciplines of invisible service — private aviation, VIP airport concierge, yacht charter, luxury stays, events access, protection travel, and bespoke itineraries.",
-};
+});
 
 export default function ServicesPage() {
   return (

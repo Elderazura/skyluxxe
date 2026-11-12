@@ -11,16 +11,21 @@ import { services } from "@/content/services";
 import { DURATION_FAST, EASE_OUT_EXPO, fadeInUp, staggerContainerLoose } from "@/lib/animations";
 import { registerGSAP } from "@/lib/gsap";
 
-const MOBILE_MAX = 767;
+/*
+ * Stacked cards instead of the pinned horizontal track: on phones, and for
+ * anyone who has asked for reduced motion (a scroll-jacked track is exactly
+ * the kind of motion that setting is for).
+ */
+const STACKED_QUERY = "(max-width: 767px), (prefers-reduced-motion: reduce)";
 
 /**
  * Vertical scroll spent per pixel of horizontal travel.
  *
  * At 1:1 the eleven full-width panels demanded ~12,800px of scrolling — 55% of
- * the entire homepage — to get past one section. 0.55 keeps the same horizontal
- * choreography but asks roughly half the wheel travel of the reader.
+ * the entire homepage — to get past one section. 0.4 keeps the same horizontal
+ * choreography for well under half the wheel travel.
  */
-const SCROLL_RATIO = 0.55;
+const SCROLL_RATIO = 0.4;
 
 /**
  * Declared at module scope on purpose. Defined inside `ServicesScroll` it would
@@ -68,6 +73,7 @@ function DesktopPanel({ service }: { service: (typeof services)[number] }) {
           </p>
           <Link
             href={`/services/${service.slug}`}
+            aria-label={`Discover ${service.name}`}
             className="group inline-flex min-h-[44px] items-center font-[family-name:var(--font-body)] text-sm font-medium tracking-wide"
             style={{ color: brand.colors.offWhite }}
           >
@@ -90,7 +96,7 @@ function DesktopPanel({ service }: { service: (typeof services)[number] }) {
         {imgSrc && (
           <Image
             src={imgSrc}
-            alt={service.name}
+            alt=""
             fill
             className="object-cover"
             sizes="50vw"
@@ -115,7 +121,7 @@ export function ServicesScroll() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia(`(max-width: ${MOBILE_MAX}px)`);
+    const mq = window.matchMedia(STACKED_QUERY);
     const sync = () => setIsMobile(mq.matches);
     sync();
     mq.addEventListener("change", sync);
@@ -147,7 +153,7 @@ export function ServicesScroll() {
           force3D: true,
         });
 
-        gsap
+        const timeline = gsap
           .timeline({
             scrollTrigger: {
               trigger: outer,
@@ -176,6 +182,24 @@ export function ServicesScroll() {
             },
             "<",
           );
+
+        /*
+         * Keyboard users tab to "Discover" links in panels that are off to the
+         * right. The browser's answer is to scroll the clipped section
+         * sideways, which leaves the track out of step with the timeline.
+         * Undo that and move the page to where the focused panel is on screen.
+         */
+        const onFocusIn = (event: FocusEvent) => {
+          outer.scrollLeft = 0;
+          const st = timeline.scrollTrigger;
+          const panels = Array.from(inner.children);
+          const index = panels.findIndex((panel) => panel.contains(event.target as Node));
+          if (!st || index < 0 || panels.length < 2) return;
+          const target = st.start + ((st.end - st.start) * index) / (panels.length - 1);
+          window.scrollTo({ top: target, behavior: "instant" });
+        };
+        outer.addEventListener("focusin", onFocusIn);
+        return () => outer.removeEventListener("focusin", onFocusIn);
       }, outer);
 
       ctx = localCtx;
@@ -200,10 +224,14 @@ export function ServicesScroll() {
     >
       {isMobile ? (
         <motion.div
-          className="flex flex-col"
+          // One column on phones; a grid when this layout is shown on a wide
+          // screen (reduced motion), where full-width cards would be enormous.
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-8%", amount: 0.08 }}
+          // "some", not a fraction: the list is several viewports tall, and on
+          // a short landscape screen 8% of it never fit in view at once.
+          viewport={{ once: true, amount: "some" }}
           variants={staggerContainerLoose}
         >
           {services.map((service) => {
@@ -219,10 +247,10 @@ export function ServicesScroll() {
                   <div className="relative aspect-[16/9] w-full overflow-hidden">
                     <Image
                       src={imgSrc}
-                      alt={service.name}
+                      alt=""
                       fill
                       className="object-cover sk-m-ken-burns"
-                      sizes="100vw"
+                      sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 34vw"
                     />
                     <div
                       className="absolute inset-0"
@@ -254,6 +282,7 @@ export function ServicesScroll() {
                   </p>
                   <Link
                     href={`/services/${service.slug}`}
+                    aria-label={`Discover ${service.name}`}
                     className="group inline-flex min-h-[44px] items-center font-[family-name:var(--font-body)] text-sm font-medium tracking-wide"
                     style={{ color: brand.colors.offWhite }}
                   >

@@ -1,11 +1,11 @@
 export const privacyPolicy = {
   title: "Privacy Policy",
-  updated: "May 2026",
+  updated: "November 2026",
   sections: [
     {
       heading: "Who we are",
       body:
-        "Skyluxxe Concierge Travel (“Skyluxxe”, “we”, “us”) is a premium travel concierge based in Abu Dhabi, United Arab Emirates. We process personal data to respond to enquiries and deliver concierge services you request.",
+        "Skyluxxe Concierge Travel — L.L.C — S.P.C (“Skyluxxe”, “we”, “us”) is a premium travel concierge based in Abu Dhabi, United Arab Emirates. We process personal data to respond to enquiries and deliver concierge services you request.",
     },
     {
       heading: "What we collect",
@@ -21,6 +21,11 @@ export const privacyPolicy = {
       heading: "Retention and security",
       body:
         "Enquiries are retained only as long as needed to respond and maintain a client relationship, then archived or deleted in line with our internal retention schedule. Access is restricted to authorised personnel and vetted partners under confidentiality obligations.",
+    },
+    {
+      heading: "Service providers",
+      body:
+        "We rely on a small number of providers to run this website and handle enquiries: Netlify (website hosting), Resend (delivery of enquiry emails to our desk), Cloudflare Turnstile (protection of the enquiry form against automated abuse), and Google Maps (the optional office map, loaded only when you choose to show it). Each processes only the data needed for its function, under its own terms and privacy policy.",
     },
     {
       heading: "Your rights",
@@ -42,7 +47,7 @@ export const privacyPolicy = {
 
 export const termsOfService = {
   title: "Terms of Service",
-  updated: "May 2026",
+  updated: "November 2026",
   sections: [
     {
       heading: "Introduction",
@@ -74,27 +79,27 @@ export const termsOfService = {
 
 export const cookiePolicy = {
   title: "Cookie Policy",
-  updated: "May 2026",
+  updated: "November 2026",
   sections: [
     {
       heading: "Overview",
       body:
-        "We use a minimal set of cookies and similar technologies to operate the site, remember preferences, and — where enabled — protect forms from abuse.",
+        "We use a minimal set of cookies and similar technologies to operate the site, remember that you have seen this notice, and protect the enquiry form from abuse. We do not use analytics or advertising cookies.",
     },
     {
-      heading: "Essential cookies",
+      heading: "Essential storage",
       body:
-        "Strictly necessary cookies support security, load balancing, and consent storage. These cannot be switched off if you use the site.",
+        "The site itself sets no tracking cookies. It stores two small items in your browser: a record that you have acknowledged the cookie notice (local storage), and a marker that the opening animation has already played in this tab (session storage). Our hosting provider may use strictly necessary cookies for security and load balancing. You can clear all of these at any time through your browser settings.",
     },
     {
-      heading: "Analytics and preferences",
+      heading: "Analytics",
       body:
-        "If we enable analytics, cookies help us understand aggregate traffic only. You may control non-essential cookies through your browser settings.",
+        "We do not currently use analytics. If that changes, we will update this policy and ask for your consent before any non-essential cookie is set.",
     },
     {
       heading: "Third parties",
       body:
-        "Embedded maps or anti-spam providers may set their own cookies subject to their policies. We select partners with proportionate data practices.",
+        "Two third-party services can set their own cookies, subject to their own policies. Cloudflare Turnstile runs on the enquiry page to verify that submissions come from people rather than automated tools; it is necessary for the form to operate securely. The Google map of our office is not loaded until you choose “Show map”, so Google sets no cookies unless you ask for the map.",
     },
     {
       heading: "Contact",

@@ -3,7 +3,7 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 import {
   DURATION_MEDIUM,
@@ -20,11 +20,55 @@ import { brandImages, videos } from "@/content/images";
 
 const WORDMARK = "SKYLUXXE";
 
+const MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+const MOBILE_QUERY = "(max-width: 767px)";
+
+function subscribeVideoMode(onChange: () => void) {
+  const mq = window.matchMedia(MOTION_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+
+/**
+ * Which video file to play, or null for none. Always null on the server, so
+ * the markup hydrates against the poster image and the video is added after —
+ * visitors who asked for reduced motion or data saving never download it.
+ */
+function getVideoSrc(): string | null {
+  if (window.matchMedia(MOTION_QUERY).matches) return null;
+  const connection = (navigator as Navigator & { connection?: { saveData?: boolean } })
+    .connection;
+  if (connection?.saveData) return null;
+  return window.matchMedia(MOBILE_QUERY).matches
+    ? videos.openingStatementBgMobile
+    : videos.openingStatementBg;
+}
+
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
   const reduced = prefersReducedMotion === true;
   const [videoFailed, setVideoFailed] = useState(false);
-  const showPosterOnly = reduced || videoFailed;
+  const videoSrc = useSyncExternalStore(subscribeVideoMode, getVideoSrc, () => null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const showVideo = videoSrc !== null && !videoFailed;
+
+  // Stop decoding once the hero has scrolled away; resume when it returns.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!showVideo || !video) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        video.play().catch(() => {
+          /* autoplay refused — the poster stays visible underneath */
+        });
+      } else {
+        video.pause();
+      }
+    });
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [showVideo]);
 
   const eyebrowVariants = useMemo((): Variants => ({
     hidden: fadeIn.hidden,
@@ -75,30 +119,28 @@ export function Hero() {
       aria-label="Skyluxxe concierge travel"
     >
       <div className="absolute inset-0 z-0 overflow-hidden">
-        {showPosterOnly ? (
-          <Image
-            src={brandImages.leatherJournal}
-            alt=""
-            fill
-            priority
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-        ) : (
+        <Image
+          src={brandImages.heroPoster}
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+        />
+        {showVideo ? (
           <video
+            ref={videoRef}
+            key={videoSrc}
             className="absolute inset-0 h-full w-full min-h-[100svh] object-cover"
+            src={videoSrc}
             autoPlay
             muted
             loop
             playsInline
-            preload="metadata"
-            poster={brandImages.leatherJournal}
             aria-hidden
             onError={() => setVideoFailed(true)}
-          >
-            <source src={videos.openingStatementBg} type="video/mp4" />
-          </video>
-        )}
+          />
+        ) : null}
         <div
           className="absolute inset-0"
           style={{

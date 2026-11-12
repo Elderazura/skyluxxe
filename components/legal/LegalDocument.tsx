@@ -62,7 +62,7 @@ export function LegalDocument({ title, updated, sections }: LegalDocumentProps) 
         </div>
         <p className="mt-16 font-[family-name:var(--font-body)] text-sm font-light">
           <Link href="/enquiry" className="text-[#B76E79] underline-offset-4 hover:underline">
-            Return to enquiry
+            Make an enquiry
           </Link>
           {" · "}
           <Link href="/" className="text-[#B76E79] underline-offset-4 hover:underline">

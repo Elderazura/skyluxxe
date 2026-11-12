@@ -1,6 +1,7 @@
 'use client'
 
 import Lenis from 'lenis'
+import { MotionConfig } from 'framer-motion'
 import {
   createContext,
   useContext,
@@ -68,6 +69,10 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
   }, [])
 
   return (
-    <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>
+    <LenisContext.Provider value={lenis}>
+      {/* Honour prefers-reduced-motion for every framer-motion animation:
+          transforms are skipped, opacity fades are kept. */}
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </LenisContext.Provider>
   )
 }

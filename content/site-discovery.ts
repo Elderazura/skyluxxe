@@ -33,11 +33,10 @@ export const publicRoutes = [
     title: "Enquiry",
     description: "Contact the Skyluxxe concierge desk for private travel arrangements.",
   },
-  {
-    path: "/journal",
-    title: "Journal",
-    description: "Editorial perspectives on premium travel and discreet concierge service.",
-  },
+  /*
+   * /journal is deliberately absent: it is a "coming soon" placeholder and is
+   * marked noindex. Add it back here once there are articles to list.
+   */
   {
     path: "/privacy",
     title: "Privacy Policy",
@@ -45,7 +44,7 @@ export const publicRoutes = [
   },
   {
     path: "/terms",
-    title: "Terms of Use",
+    title: "Terms of Service",
     description: "Terms governing use of the Skyluxxe website.",
   },
   {
@@ -60,7 +59,7 @@ export const siteFaqs = [
   {
     question: "What is Skyluxxe Concierge Travel?",
     answer:
-      "Skyluxxe Concierge Travel is an Abu Dhabi-based ultra-luxury travel concierge (SKYLUXXE CONCIERGE TRAVEL - L.L.C - S.P.C) providing private aviation, yacht charter, VIP airport assistance, luxury hotel and villa stays, prestige events access, executive protection travel, and bespoke itineraries for discerning clients worldwide.",
+      `Skyluxxe Concierge Travel is an Abu Dhabi-based ultra-luxury travel concierge (${brand.legal.entityName}) providing private aviation, yacht charter, VIP airport assistance, luxury hotel and villa stays, prestige events access, executive protection travel, and bespoke itineraries for discerning clients worldwide.`,
   },
   {
     question: "Where is Skyluxxe Concierge Travel located?",
@@ -69,7 +68,7 @@ export const siteFaqs = [
   },
   {
     question: "What services does Skyluxxe offer?",
-    answer: `Skyluxxe offers eleven concierge disciplines: ${services.map((s) => s.name).join("; ")}.`,
+    answer: `Skyluxxe offers ${services.length} concierge disciplines: ${services.map((s) => s.name).join("; ")}.`,
   },
   {
     question: "How do I contact Skyluxxe Concierge Travel?",

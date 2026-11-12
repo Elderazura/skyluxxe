@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useId, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -15,7 +15,8 @@ import { brand } from "@/content/brand";
 import { ENQUIRY_NATURE_OPTIONS } from "@/content/enquiry";
 import { lifestyleImages, brandImages, logos } from "@/content/images";
 import {
-  mapApiErrorToFields,
+  ENQUIRY_FIELD_ORDER,
+  ENQUIRY_LIMITS,
   validateEnquiryFields,
   type EnquiryFieldErrors,
 } from "@/lib/enquiry-validation";
@@ -44,6 +45,24 @@ export function EnquiryPageContent() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [mapLoaded, setMapLoaded] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  /** Show errors and move focus to the first field that needs attention. */
+  const showErrors = useCallback((next: FieldErrors) => {
+    setErrors(next);
+    const first = ENQUIRY_FIELD_ORDER.find((name) => next[name]);
+    if (first) {
+      const el = formRef.current?.elements.namedItem(first);
+      if (el instanceof HTMLElement) el.focus();
+    }
+  }, []);
+
+  // The form unmounts on success; without this, focus would fall to <body>.
+  useEffect(() => {
+    if (submitted) successRef.current?.focus();
+  }, [submitted]);
 
   const clearFieldError = useCallback((field: keyof FieldErrors) => {
     setErrors((prev) => {
@@ -66,6 +85,7 @@ export function EnquiryPageContent() {
       nature: String(data.get("nature") ?? ""),
       message: String(data.get("message") ?? ""),
     };
+    const company = String(data.get("company") ?? "");
 
     const clientErrors = validateEnquiryFields(payload);
     if (TURNSTILE_SITE_KEY && !turnstileRef.current?.getToken()) {
@@ -73,7 +93,7 @@ export function EnquiryPageContent() {
     }
 
     if (Object.keys(clientErrors).length > 0) {
-      setErrors(clientErrors);
+      showErrors(clientErrors);
       return;
     }
 
@@ -86,26 +106,32 @@ export function EnquiryPageContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...payload,
+          company,
           turnstileToken: turnstileRef.current?.getToken() ?? undefined,
         }),
       });
-      const json = (await res.json()) as {
+      const json = (await res.json().catch(() => ({}))) as {
         error?: string;
         fields?: EnquiryFieldErrors;
         ok?: boolean;
       };
 
       if (!res.ok) {
-        const apiFields = json.fields ?? mapApiErrorToFields(json.error ?? "");
-        setErrors({
+        /*
+         * Field errors come back keyed by field. Anything else (delivery
+         * failure, rate limit) is a form-level message — never guessed onto a
+         * field from its wording.
+         */
+        const apiFields = json.fields ?? {};
+        showErrors({
           ...apiFields,
           form:
-            json.error && Object.keys(apiFields).length === 0
-              ? json.error
+            Object.keys(apiFields).length === 0
+              ? (json.error ??
+                "We could not send your enquiry. Please email concierge@skyluxxe.ae directly.")
               : undefined,
         });
         turnstileRef.current?.reset();
-        setSubmitting(false);
         return;
       }
 
@@ -120,7 +146,7 @@ export function EnquiryPageContent() {
     } finally {
       setSubmitting(false);
     }
-  }, []);
+  }, [showErrors]);
 
   return (
     <article
@@ -132,8 +158,8 @@ export function EnquiryPageContent() {
         <div className="relative hidden md:col-span-5 md:block lg:col-span-5">
           <div className="sticky top-0 h-screen">
             <Image
-              src={lifestyleImages.womanCarGolden}
-              alt="Elegant arrival in golden light"
+              src={lifestyleImages.chauffeurArrivalDaylight}
+              alt="A chauffeur holding the car door for two guests arriving at a residence"
               fill
               className="object-cover"
               sizes="45vw"
@@ -150,8 +176,8 @@ export function EnquiryPageContent() {
 
         <div className="relative aspect-[16/9] w-full md:hidden">
           <Image
-            src={lifestyleImages.womanCarGolden}
-            alt="Elegant arrival in golden light"
+            src={lifestyleImages.chauffeurArrivalDaylight}
+            alt="A chauffeur holding the car door for two guests arriving at a residence"
             fill
             className="object-cover"
             sizes="100vw"
@@ -244,21 +270,48 @@ export function EnquiryPageContent() {
                   <p className="text-sm text-muted-blue/80">{brand.contact.urgentLine}</p>
                 </div>
                 <div className="min-h-[200px] overflow-hidden rounded-sm border border-white/[0.08] bg-[#162235]">
-                  <iframe
-                    title="Skyluxxe — Abu Dhabi"
-                    src={brand.office.mapEmbedUrl}
-                    className="h-[220px] w-full border-0 md:h-full md:min-h-[240px]"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  />
+                  {mapLoaded ? (
+                    <iframe
+                      title="Map — Skyluxxe, Al Khazna Tower, Abu Dhabi"
+                      src={brand.office.mapEmbedUrl}
+                      className="h-[220px] w-full border-0 md:h-full md:min-h-[240px]"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    /*
+                     * Google Maps sets its own cookies, so it only loads when
+                     * the visitor asks for it.
+                     */
+                    <div className="flex h-[220px] flex-col items-center justify-center gap-4 px-6 text-center md:h-full md:min-h-[240px]">
+                      <p className="font-[family-name:var(--font-body)] text-sm font-light leading-relaxed text-muted-blue">
+                        The map is provided by Google and sets its own cookies.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setMapLoaded(true)}
+                        className="inline-flex min-h-[44px] items-center border border-[#DFA293] px-5 font-[family-name:var(--font-body)] text-xs uppercase tracking-[0.14em] text-off-white transition-colors hover:bg-[#DFA293] hover:text-[#0D1B2A]"
+                      >
+                        Show map
+                      </button>
+                      <a
+                        href="https://www.google.com/maps/search/?api=1&query=Al+Khazna+Tower,+Najdah+Street,+Abu+Dhabi"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-[family-name:var(--font-serif)] text-sm italic text-[#DFA293] underline-offset-4 hover:underline"
+                      >
+                        Open in Google Maps
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
             </section>
 
             <div className="relative aspect-[21/9] w-full overflow-hidden rounded-sm">
               <Image
-                src={lifestyleImages.jetStairsTarmac}
-                alt="Aircraft stairs — seamless ground-to-air handoffs."
+                src={lifestyleImages.terminalCorridorEscort}
+                alt="A greeter escorting two travellers through a private terminal corridor."
                 fill
                 className="object-cover"
                 sizes="(max-width: 767px) 100vw, 55vw"
@@ -272,7 +325,12 @@ export function EnquiryPageContent() {
 
           <div className="mt-12 max-w-[560px]">
             {submitted ? (
-              <div role="status" aria-live="polite" className="block">
+              <div
+                ref={successRef}
+                tabIndex={-1}
+                role="status"
+                className="block outline-none"
+              >
                 <div className="mb-8 flex">
                   <DiamondMarker size="sm" color="gold" />
                 </div>
@@ -288,9 +346,18 @@ export function EnquiryPageContent() {
               <form
                 id={`${formId}-form`}
                 className="flex flex-col gap-12 md:gap-14"
+                ref={formRef}
                 onSubmit={onSubmit}
                 noValidate
               >
+                {/* Honeypot — hidden from people and assistive tech; bots fill it. */}
+                <div aria-hidden className="absolute left-[-9999px] h-px w-px overflow-hidden">
+                  <label>
+                    Company
+                    <input type="text" name="company" tabIndex={-1} autoComplete="off" />
+                  </label>
+                </div>
+
                 {errors.form ? (
                   <p
                     role="alert"
@@ -309,6 +376,7 @@ export function EnquiryPageContent() {
                     name="name"
                     type="text"
                     autoComplete="name"
+                    maxLength={ENQUIRY_LIMITS.name}
                     required
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name ? `${formId}-name-error` : undefined}
@@ -333,6 +401,7 @@ export function EnquiryPageContent() {
                     type="email"
                     autoComplete="email"
                     inputMode="email"
+                    maxLength={ENQUIRY_LIMITS.email}
                     required
                     aria-invalid={!!errors.email}
                     aria-describedby={errors.email ? `${formId}-email-error` : undefined}
@@ -356,9 +425,19 @@ export function EnquiryPageContent() {
                     name="phone"
                     type="tel"
                     autoComplete="tel"
+                    inputMode="tel"
+                    maxLength={ENQUIRY_LIMITS.phone}
+                    aria-invalid={!!errors.phone}
+                    aria-describedby={errors.phone ? `${formId}-phone-error` : undefined}
+                    onInput={() => clearFieldError("phone")}
                     className={`${fieldBase} focus:border-rose-gold`}
-                    style={fieldBorderDefault}
+                    style={errors.phone ? fieldBorderError : fieldBorderDefault}
                   />
+                  {errors.phone ? (
+                    <p id={`${formId}-phone-error`} className="mt-2 text-sm text-[#DFA293]">
+                      {errors.phone}
+                    </p>
+                  ) : null}
                 </div>
 
                 <div>
@@ -416,6 +495,7 @@ export function EnquiryPageContent() {
                     id={`${formId}-message`}
                     name="message"
                     rows={5}
+                    maxLength={ENQUIRY_LIMITS.message}
                     required
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? `${formId}-message-error` : undefined}
@@ -430,20 +510,27 @@ export function EnquiryPageContent() {
                   ) : null}
                 </div>
 
-                {TURNSTILE_SITE_KEY ? (
-                  <div>
+                <div>
+                  {TURNSTILE_SITE_KEY ? (
                     <TurnstileWidget
                       ref={turnstileRef}
                       siteKey={TURNSTILE_SITE_KEY}
                       onReady={() => clearFieldError("turnstile")}
+                      onError={() =>
+                        setErrors((prev) => ({
+                          ...prev,
+                          turnstile: `The security check could not load. Please email ${brand.contact.email} instead.`,
+                        }))
+                      }
                     />
-                    {errors.turnstile ? (
-                      <p role="alert" className="mt-2 text-sm text-[#DFA293]">
-                        {errors.turnstile}
-                      </p>
-                    ) : null}
-                  </div>
-                ) : null}
+                  ) : null}
+                  {/* Outside the widget branch so a server-side check failure is never silent. */}
+                  {errors.turnstile ? (
+                    <p role="alert" className="mt-2 text-sm text-[#DFA293]">
+                      {errors.turnstile}
+                    </p>
+                  ) : null}
+                </div>
 
                 <p className="font-[family-name:var(--font-body)] text-sm font-light leading-relaxed text-muted-blue">
                   By submitting this form you agree to our{" "}
@@ -489,10 +576,10 @@ export function EnquiryPageContent() {
                 Prefer context before you write?
               </p>
               <Link
-                href="/journal"
+                href="/about"
                 className="mt-3 inline-flex items-center gap-2 font-[family-name:var(--font-serif)] text-sm italic text-[#DFA293] transition-opacity hover:opacity-85"
               >
-                Read the Journal
+                Read our story
                 <span aria-hidden>&rarr;</span>
               </Link>
             </div>

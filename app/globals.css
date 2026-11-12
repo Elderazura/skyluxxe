@@ -118,6 +118,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Intro overlay: skipped for returning visitors before React hydrates
+   (attribute set by the inline script in app/layout.tsx). */
+html[data-visited] .sk-preloader {
+  display: none;
+}
+
 /* Selection — rose gold */
 ::selection {
   background-color: color-mix(in srgb, var(--color-rose-gold) 40%, transparent);

@@ -4,7 +4,7 @@ import { Navigation } from "@/components/ui/Navigation";
 import { Footer } from "@/components/ui/Footer";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Cursor } from "@/components/ui/Cursor";
-import { Preloader } from "@/components/ui/Preloader";
+import { Preloader, PRELOADER_BOOT_SCRIPT } from "@/components/ui/Preloader";
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { SITE_URL, siteSummary } from "@/content/site-discovery";
 import { getSiteJsonLdScript } from "@/lib/json-ld";
@@ -74,6 +74,13 @@ const inter = localFont({
   preload: false,
 });
 
+const NO_JS_CSS = `
+.sk-preloader{display:none!important}
+main [style*="opacity:0;"],main [style$="opacity:0"]{opacity:1!important}
+main [style*="clip-path"]{clip-path:none!important}
+main [style*="translate"],main [style*="scale"]{transform:none!important}
+`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -83,12 +90,12 @@ export const metadata: Metadata = {
   description: siteSummary,
   applicationName: "Skyluxxe Concierge Travel",
   category: "Travel",
-  alternates: {
-    canonical: "/",
-    types: {
-      "text/plain": "/llms.txt",
-    },
-  },
+  /*
+   * No `alternates.canonical` here. Metadata merges shallowly, so a canonical
+   * set in the root layout is inherited by every page that does not override
+   * it — which told search engines the whole site was a duplicate of "/".
+   * Each page sets its own through lib/page-metadata.ts.
+   */
   openGraph: {
     type: "website",
     locale: "en_AE",
@@ -138,6 +145,16 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-body bg-midnight-aviation-navy text-off-white" suppressHydrationWarning>
+        {/* Before first paint: lets CSS skip the intro for returning visitors. */}
+        <script dangerouslySetInnerHTML={{ __html: PRELOADER_BOOT_SCRIPT }} />
+        {/*
+          Scroll reveals start hidden (opacity 0, clipped, or shifted) and are
+          shown by JS. Without JS they would stay hidden for good, and the
+          intro overlay could never be dismissed — so undo both here.
+        */}
+        <noscript>
+          <style>{NO_JS_CSS}</style>
+        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: getSiteJsonLdScript() }}

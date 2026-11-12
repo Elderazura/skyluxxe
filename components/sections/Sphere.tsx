@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import { sphereImages } from "@/content/images";
 import { brand } from "@/content/brand";
-import { fadeInUp, staggerContainer, staggerContainerLoose } from "@/lib/animations";
+import { fadeInUp, staggerContainerLoose } from "@/lib/animations";
 
 const categories = [
   {

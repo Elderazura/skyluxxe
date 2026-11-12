@@ -12,6 +12,7 @@ import {
   type Service,
 } from "@/content/services";
 import { brand } from "@/content/brand";
+import { pageMetadata } from "@/lib/page-metadata";
 import { serviceImages, getCtaBgImage } from "@/content/images";
 
 type PageProps = {
@@ -30,10 +31,11 @@ export async function generateMetadata({
   if (!service) {
     return { title: "Service" };
   }
-  return {
+  return pageMetadata({
+    path: `/services/${service.slug}`,
     title: service.name,
     description: service.shortDescription,
-  };
+  });
 }
 
 function neighborsFor(service: Service) {

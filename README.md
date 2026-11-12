@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Skyluxxe Concierge Travel
 
-## Getting Started
+Marketing site for Skyluxxe Concierge Travel (skyluxxe.ae). Next.js App Router,
+React 19, Tailwind CSS 4, deployed on Netlify.
 
-First, run the development server:
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then fill in what you need
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Other scripts: `npm run build`, `npm run start`, `npm run lint`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All variables are documented in [`.env.example`](.env.example). The ones that
+matter for a working production site:
 
-## Learn More
+- **Enquiry delivery** — `RESEND_API_KEY` (with `ENQUIRY_FROM_EMAIL` on a
+  verified domain) and/or `ENQUIRY_WEBHOOK_URL`. Without either, the enquiry
+  form cannot deliver and tells visitors to email instead.
+- **Spam protection** — `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and
+  `TURNSTILE_SECRET_KEY`, set together.
 
-To learn more about Next.js, take a look at the following resources:
+## Where things live
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `app/` — routes. Each page sets its canonical URL and share metadata through
+  `lib/page-metadata.ts`.
+- `content/` — copy and data: services, brand details, legal text, image map.
+- `components/sections/` — page sections; `components/ui/` — shared UI.
+- `app/api/enquiry/route.ts` — enquiry form endpoint (validation, Turnstile,
+  rate limit, delivery).
+- `next.config.ts` — security headers and image settings.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/journal` is a placeholder: it is `noindex` and left out of the sitemap
+  until there are articles.
+- The hero video has two encodes in `public/`: the full one for desktop and a
+  540p one for narrow screens. Replace both when the footage changes, along
+  with `public/images/brand/hero-poster.webp` (its first frame).

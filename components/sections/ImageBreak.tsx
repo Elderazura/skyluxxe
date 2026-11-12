@@ -32,13 +32,12 @@ export function ImageBreak({
       ref={ref}
       className="relative w-full overflow-hidden"
       style={{ height }}
-      aria-label={alt}
     >
       <motion.div
         className="absolute inset-0"
         style={{ y: prefersReducedMotion ? 0 : y }}
       >
-        <div className="absolute inset-[-8%] h-[116%] w-full overflow-hidden">
+        <div className="absolute inset-x-0 top-[-8%] h-[116%] overflow-hidden">
           <Image
             src={src}
             alt={alt}

@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { useLenis } from "./SmoothScroll";
+
 const LINKS = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
@@ -36,43 +38,41 @@ const linkVariants = {
 };
 
 export function Menu({ isOpen, onClose }: MenuProps) {
+  const lenis = useLenis();
+
   useEffect(() => {
     if (!isOpen) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // Lenis scrolls in JS, so `overflow: hidden` alone does not stop the wheel
+    // moving the page behind the overlay.
+    lenis?.stop();
     return () => {
       document.body.style.overflow = prev;
+      lenis?.start();
     };
-  }, [isOpen]);
+  }, [isOpen, lenis]);
 
   return (
     <AnimatePresence>
       {isOpen ? (
         <motion.div
-          className="fixed inset-0 z-40 flex flex-col bg-[#0D1B2A]/95"
+          className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-[#0D1B2A]/95"
+          data-lenis-prevent
           initial={{ clipPath: "inset(0 0 100% 0)" }}
           animate={{ clipPath: "inset(0 0 0 0)" }}
           exit={{ clipPath: "inset(0 0 100% 0)" }}
           transition={overlayTransition}
-          aria-modal="true"
-          role="dialog"
-          aria-label="Site menu"
         >
-          <button
-            type="button"
-            onClick={onClose}
-            className="absolute top-8 right-[var(--gutter-x)] z-10 flex h-11 w-11 items-center justify-center text-[#F5F0EB] transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#DFA293]"
-            aria-label="Close menu"
-          >
-            <span className="relative block h-4 w-4">
-              <span className="absolute top-1/2 left-0 block h-px w-full -translate-y-1/2 rotate-45 bg-current" />
-              <span className="absolute top-1/2 left-0 block h-px w-full -translate-y-1/2 -rotate-45 bg-current" />
-            </span>
-          </button>
-
+          {/*
+            No close button of its own: the header toggle sits above this
+            overlay in the same spot and already reads "Close menu". Keyboard
+            handling (Escape, focus containment, focus return) lives with that
+            toggle in Navigation.tsx.
+          */}
           <nav
-            className="flex flex-1 flex-col items-center justify-center px-[var(--gutter-x)]"
-            aria-label="Primary"
+            className="flex flex-1 flex-col items-center justify-center px-[var(--gutter-x)] pt-28 pb-12"
+            aria-label="Site menu"
           >
             <ul className="flex w-full max-w-md flex-col items-stretch text-center">
               {LINKS.map((item, i) => (

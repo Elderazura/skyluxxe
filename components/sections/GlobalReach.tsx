@@ -42,12 +42,11 @@ export function GlobalReach() {
       {/* Hero band: image + structured overlay */}
       <div className="relative min-h-[min(88vh,920px)]">
         <Image
-          src={lifestyleImages.jetStairsTarmac}
-          alt="Boarding a private jet from a luxury car on the tarmac"
+          src={lifestyleImages.terminalCorridorEscort}
+          alt="A greeter escorting two travellers through a private terminal corridor"
           fill
           className="object-cover"
           sizes="100vw"
-          priority={false}
         />
         <div
           className="absolute inset-0"

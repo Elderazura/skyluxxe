@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { pageMetadata } from "@/lib/page-metadata";
+
 import { AboutValuesList } from "@/components/sections/AboutValuesList";
 import { GlimpseRail } from "@/components/sections/GlimpseRail";
 import { InlineCta } from "@/components/sections/InlineCta";
@@ -12,11 +14,12 @@ import { brand } from "@/content/brand";
 import { crossLinkExplore } from "@/content/crossLinks";
 import { brandImages } from "@/content/images";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/about",
   title: "Our Story",
   description:
     "Born in Abu Dhabi — fifteen years of discreet concierge travel for principals who expect precision, warmth, and invisible service.",
-};
+});
 
 const STORY_STATS: readonly ScrollStatItem[] = [
   {
@@ -311,7 +314,7 @@ export default function AboutPage() {
               <span
                 className="pointer-events-none absolute -left-4 top-0 hidden h-full w-px md:block"
                 style={{
-                  background: `linear-gradient(180deg, transparent, ${brand.colors.gold}35%, transparent)`,
+                  background: `linear-gradient(180deg, transparent, ${brand.colors.gold} 35%, transparent)`,
                 }}
                 aria-hidden
               />

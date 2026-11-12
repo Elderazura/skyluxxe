@@ -16,19 +16,22 @@ export type ScrollStatItem = {
   durationMs?: number;
 };
 
+/*
+ * Starts at the real figure, so server-rendered HTML (and anyone without JS)
+ * reads "15+" rather than "0+". The count-up replays from zero only once the
+ * stat scrolls into view; until then the cell is still faded out by the
+ * section's reveal, so the swap is never seen.
+ */
 function useCountUp(
   target: number,
-  active: boolean,
+  run: boolean,
   durationMs: number,
   decimals = 0,
 ) {
-  const [n, setN] = useState(0);
+  const [n, setN] = useState(target);
 
   useEffect(() => {
-    if (!active) {
-      setN(0);
-      return;
-    }
+    if (!run) return;
     let frame: number;
     const start = performance.now();
     const step = (now: number) => {
@@ -42,7 +45,7 @@ function useCountUp(
     };
     frame = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frame);
-  }, [active, target, durationMs, decimals]);
+  }, [run, target, durationMs, decimals]);
 
   return n;
 }
@@ -68,7 +71,7 @@ export function ScrollStats({ items, className }: ScrollStatsProps) {
       <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
         {items.map((item) => (
           <motion.div key={item.id} variants={fadeInUp}>
-            <StatCell item={item} forceActive={reduceMotion === true} />
+            <StatCell item={item} staticValue={reduceMotion === true} />
           </motion.div>
         ))}
       </div>
@@ -78,29 +81,27 @@ export function ScrollStats({ items, className }: ScrollStatsProps) {
 
 function StatCell({
   item,
-  forceActive,
+  staticValue,
 }: {
   item: ScrollStatItem;
-  forceActive: boolean;
+  /** Reduced motion: show the figure, skip the count-up. */
+  staticValue: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(forceActive);
+  const [seen, setSeen] = useState(false);
   const duration = item.durationMs ?? 1800;
   const decimals = item.decimals ?? 0;
-  const displayed = useCountUp(item.value, active, duration, decimals);
+  const displayed = useCountUp(item.value, seen && !staticValue, duration, decimals);
 
   useEffect(() => {
-    if (forceActive) {
-      setActive(true);
-      return;
-    }
+    if (staticValue) return;
     const el = ref.current;
     if (!el) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setActive(true);
+          setSeen(true);
           observer.disconnect();
         }
       },
@@ -108,7 +109,7 @@ function StatCell({
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [forceActive]);
+  }, [staticValue]);
 
   return (
     <div ref={ref} className="text-center">

@@ -52,7 +52,7 @@ export function ReachRegions({ regions }: ReachRegionsProps) {
                 <div className="relative aspect-[4/3] w-full overflow-hidden md:aspect-[3/2]">
                   <Image
                     src={region.image}
-                    alt={`${region.name} destination`}
+                    alt=""
                     fill
                     className="object-cover"
                     sizes="(max-width: 767px) 100vw, 50vw"

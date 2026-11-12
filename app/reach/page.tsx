@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/page-metadata";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,11 +14,12 @@ import { brand } from "@/content/brand";
 import { crossLinkExplore } from "@/content/crossLinks";
 import { lifestyleImages, brandImages } from "@/content/images";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/reach",
   title: "Global Reach",
   description:
     "Abu Dhabi at the centre — primary hubs and an extended partner network across the Middle East, Europe, Asia Pacific, the Americas, and the Indian Ocean.",
-};
+});
 
 const REGIONS: readonly ReachRegion[] = [
   {
@@ -31,7 +34,7 @@ const REGIONS: readonly ReachRegion[] = [
     name: "Europe",
     primaryHubs: ["London", "Paris", "Geneva"],
     extendedNetwork: ["Monaco", "Milan", "Zurich", "Saint-Tropez", "Amsterdam"],
-    image: lifestyleImages.parisLuggage,
+    image: lifestyleImages.culturalTour,
   },
   {
     id: "apac",
@@ -45,14 +48,14 @@ const REGIONS: readonly ReachRegion[] = [
     name: "Americas",
     primaryHubs: ["New York", "Los Angeles", "Miami"],
     extendedNetwork: ["Aspen", "São Paulo", "Mexico City", "Toronto"],
-    image: lifestyleImages.manExitingJet,
+    image: lifestyleImages.jetArrivalSunset,
   },
   {
     id: "africa",
     name: "Africa & Indian Ocean",
     primaryHubs: ["Cape Town", "Marrakech", "Seychelles"],
     extendedNetwork: ["Mauritius", "Zanzibar", "Nairobi"],
-    image: lifestyleImages.safariDining,
+    image: lifestyleImages.coastalSuite,
   },
 ];
 
@@ -62,8 +65,8 @@ export default function ReachPage() {
       {/* Full-bleed hero image */}
       <header className="relative min-h-[60vh] overflow-hidden md:min-h-[70vh]">
         <Image
-          src={lifestyleImages.parisLuggage}
-          alt="Luggage at Place Vendôme, Paris"
+          src={lifestyleImages.culturalTour}
+          alt="Guests on a private guided visit to a historic palace courtyard"
           fill
           priority
           className="object-cover"
