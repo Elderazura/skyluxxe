@@ -58,7 +58,7 @@ export const brand = {
     jurisdiction: "Abu Dhabi, United Arab Emirates",
   },
   social: {
-    instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM?.trim() || "https://www.instagram.com/skyluxxe",
+    instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM?.trim() || "https://www.instagram.com/skyluxxeconcierge",
     linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN?.trim() || "https://www.linkedin.com/company/skyluxxe",
     x: process.env.NEXT_PUBLIC_SOCIAL_X?.trim() || "https://x.com/skyluxxe",
     pinterest: process.env.NEXT_PUBLIC_SOCIAL_PINTEREST?.trim() || "https://www.pinterest.com/skyluxxe",
