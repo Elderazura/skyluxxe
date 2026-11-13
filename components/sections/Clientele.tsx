@@ -10,7 +10,6 @@ import { MaskedText } from "@/components/ui/MaskedText";
 import { RevealImage } from "@/components/ui/RevealImage";
 import { brandImages } from "@/content/images";
 import {
-  DURATION_SLOW,
   EASE_IN_OUT_CUBIC,
   fadeInUp,
   imageReveal,
@@ -47,14 +46,10 @@ const clienteleStagger: Variants = {
 export function Clientele() {
   return (
     <section
-      className="bg-[#FAF7F4] px-[var(--gutter-x)]"
-      style={{
-        paddingTop: "clamp(8rem, 15vh, 12rem)",
-        paddingBottom: "clamp(8rem, 15vh, 12rem)",
-      }}
+      className="bg-[#FAF7F4] px-[var(--gutter-x)] py-20 md:py-[clamp(8rem,15vh,12rem)]"
     >
       <div className="mx-auto max-w-[var(--container-max)]">
-        <header className="mb-16 md:mb-24">
+        <header className="mb-10 md:mb-24">
           <div className="flex flex-wrap items-center gap-3 md:gap-4">
             <DiamondMarker color="gold" size="sm" className="shrink-0" />
             <MaskedText
@@ -65,7 +60,7 @@ export function Clientele() {
             </MaskedText>
           </div>
           <motion.div
-            className="mt-8 max-w-xs overflow-hidden"
+            className="mt-6 max-w-xs overflow-hidden md:mt-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-12%" }}
@@ -76,12 +71,12 @@ export function Clientele() {
         </header>
 
         {/* Asymmetric layout: image left, text right */}
-        <div className="grid grid-cols-1 items-start gap-12 md:grid-cols-12 md:gap-16 lg:gap-20">
+        <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-12 md:gap-16 lg:gap-20">
           {/* Left: editorial image — the membership card */}
           <div className="md:col-span-5">
             <div className="md:sticky md:top-32">
               <RevealImage>
-                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-sm">
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-sm md:aspect-[3/4]">
                   <Image
                     src={brandImages.membershipCard}
                     alt="White-gloved hand presenting a Skyluxxe membership card"
@@ -99,7 +94,7 @@ export function Clientele() {
 
           {/* Right: stacked client types */}
           <motion.div
-            className="flex flex-col gap-14 md:col-span-7 md:gap-16 lg:gap-20"
+            className="flex flex-col gap-7 md:col-span-7 md:gap-16 lg:gap-20"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-10%", amount: 0.2 }}
@@ -109,10 +104,9 @@ export function Clientele() {
               <motion.article
                 key={col.title}
                 variants={fadeInUp}
-                className="flex flex-col gap-4 border-t border-[#1A1A1A]/10 pt-8 md:gap-5 md:pt-10"
-                style={{ transitionDuration: `${DURATION_SLOW}s` }}
+                className="flex flex-col gap-2 border-t border-[#1A1A1A]/10 pt-6 md:gap-5 md:pt-10"
               >
-                <h2 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-[#1A1A1A] md:text-[2.25rem]">
+                <h2 className="font-[family-name:var(--font-display)] text-2xl tracking-tight text-[#1A1A1A] md:text-[2.25rem]">
                   {col.title}
                 </h2>
                 <p className="max-w-lg font-[family-name:var(--font-body)] text-sm font-light leading-relaxed text-[#1A1A1A]/80 md:text-[0.9375rem]">

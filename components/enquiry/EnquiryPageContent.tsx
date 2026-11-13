@@ -174,7 +174,7 @@ export function EnquiryPageContent() {
           </div>
         </div>
 
-        <div className="relative aspect-[16/9] w-full md:hidden">
+        <div className="relative aspect-[2/1] w-full md:hidden">
           <Image
             src={lifestyleImages.chauffeurArrivalDaylight}
             alt="A chauffeur holding the car door for two guests arriving at a residence"
@@ -191,9 +191,14 @@ export function EnquiryPageContent() {
           />
         </div>
 
-        <div className="flex flex-col justify-center px-[var(--gutter-x)] py-16 md:col-span-7 md:px-16 md:py-20 lg:col-span-7 lg:px-24">
-          <header className="max-w-[560px]">
-            <Link href="/" className="mb-8 inline-block md:mb-10">
+        {/*
+          Phones reorder this column with `order-*`: heading, one-tap contact,
+          the form, then the desk details. On a phone the form is the point of
+          the page and was three screens down.
+        */}
+        <div className="flex flex-col justify-center px-[var(--gutter-x)] pt-10 pb-16 md:col-span-7 md:px-16 md:py-20 lg:col-span-7 lg:px-24">
+          <header className="max-w-[560px] max-md:order-1">
+            <Link href="/" className="mb-8 hidden md:mb-10 md:inline-block">
               <Image
                 src={logos.monogramRoseGold}
                 alt="Skyluxxe"
@@ -204,7 +209,7 @@ export function EnquiryPageContent() {
               />
             </Link>
 
-            <div className="mb-8 flex items-center gap-3">
+            <div className="mb-6 flex items-center gap-3 md:mb-8">
               <DiamondMarker size="md" />
             </div>
 
@@ -214,16 +219,37 @@ export function EnquiryPageContent() {
               </span>
             </MaskedText>
 
-            <p className="mt-6 max-w-md font-[family-name:var(--font-serif)] text-lg italic leading-relaxed text-off-white/90 md:text-xl">
+            <p className="mt-4 max-w-md font-[family-name:var(--font-serif)] text-lg italic leading-relaxed text-off-white/90 md:mt-6 md:text-xl">
               Every Skyluxxe relationship begins with a confidential conversation.
             </p>
 
-            <div className="mt-8 max-w-sm">
+            <div className="mt-8 hidden max-w-sm md:block">
               <HairlineRule accent="gold" />
             </div>
           </header>
 
-          <div className="mt-12 grid max-w-[560px] grid-cols-1 gap-10 md:gap-12">
+          {/* Phones only: reach the desk in one tap, before any typing. */}
+          <div className="mt-8 grid grid-cols-3 gap-2 max-md:order-2 md:hidden">
+            {[
+              { href: brand.contact.whatsAppUrl, label: "WhatsApp", external: true },
+              { href: `tel:${brand.contact.phoneTel}`, label: "Call", external: false },
+              { href: `mailto:${brand.contact.email}`, label: "Email", external: false },
+            ].map((action) => (
+              <a
+                key={action.label}
+                href={action.href}
+                {...(action.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="flex min-h-[48px] items-center justify-center border border-white/15 font-[family-name:var(--font-body)] text-[11px] uppercase tracking-[0.16em] text-off-white active:border-[#DFA293] active:text-[#DFA293]"
+              >
+                {action.label}
+              </a>
+            ))}
+          </div>
+          <p className="mt-8 font-[family-name:var(--font-body)] text-xs font-light uppercase tracking-[0.14em] text-muted-blue max-md:order-2 md:hidden">
+            Or write to us
+          </p>
+
+          <div className="mt-14 grid max-w-[560px] grid-cols-1 gap-10 max-md:order-4 max-md:border-t max-md:border-white/[0.08] max-md:pt-10 md:mt-12 md:gap-12">
             <section aria-labelledby={`${formId}-office`}>
               <h2
                 id={`${formId}-office`}
@@ -308,7 +334,7 @@ export function EnquiryPageContent() {
               </div>
             </section>
 
-            <div className="relative aspect-[21/9] w-full overflow-hidden rounded-sm">
+            <div className="relative hidden aspect-[21/9] w-full overflow-hidden rounded-sm md:block">
               <Image
                 src={lifestyleImages.terminalCorridorEscort}
                 alt="A greeter escorting two travellers through a private terminal corridor."
@@ -323,7 +349,7 @@ export function EnquiryPageContent() {
             </div>
           </div>
 
-          <div className="mt-12 max-w-[560px]">
+          <div className="mt-6 max-w-[560px] max-md:order-3 md:mt-12">
             {submitted ? (
               <div
                 ref={successRef}
@@ -345,7 +371,7 @@ export function EnquiryPageContent() {
             ) : (
               <form
                 id={`${formId}-form`}
-                className="flex flex-col gap-12 md:gap-14"
+                className="flex flex-col gap-9 md:gap-14"
                 ref={formRef}
                 onSubmit={onSubmit}
                 noValidate
@@ -500,6 +526,7 @@ export function EnquiryPageContent() {
                     aria-invalid={!!errors.message}
                     aria-describedby={errors.message ? `${formId}-message-error` : undefined}
                     onInput={() => clearFieldError("message")}
+                    data-lenis-prevent
                     className={`${fieldBase} min-h-[8rem] resize-y focus:border-rose-gold`}
                     style={errors.message ? fieldBorderError : fieldBorderDefault}
                   />
@@ -559,7 +586,7 @@ export function EnquiryPageContent() {
             )}
           </div>
 
-          <div className="relative mt-16 aspect-[16/7] w-full max-w-[560px] overflow-hidden rounded-sm md:mt-20">
+          <div className="relative mt-12 aspect-[16/7] w-full max-w-[560px] overflow-hidden rounded-sm max-md:order-5 md:mt-20">
             <Image
               src={brandImages.leatherJournal}
               alt="Leather journal — editorial calm and continuity."

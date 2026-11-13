@@ -161,7 +161,7 @@ export default async function ServiceDetailPage({ params }: PageProps) {
       <div className="px-[var(--gutter-x)] pb-16 pt-14 md:pb-20 md:pt-20">
         <div className={bodyClass}>
           <p
-            className="font-[family-name:var(--font-serif)] text-xl font-light leading-[1.75] md:text-2xl md:leading-[1.8]"
+            className="font-[family-name:var(--font-serif)] text-lg font-light leading-[1.7] md:text-2xl md:leading-[1.8]"
             style={{ color: brand.colors.offWhite }}
           >
             {service.longDescription}

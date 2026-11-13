@@ -124,6 +124,14 @@ html[data-visited] .sk-preloader {
   display: none;
 }
 
+/* Horizontal rails show their own position indicator instead of a scrollbar. */
+.sk-no-scrollbar {
+  scrollbar-width: none;
+}
+.sk-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Selection — rose gold */
 ::selection {
   background-color: color-mix(in srgb, var(--color-rose-gold) 40%, transparent);

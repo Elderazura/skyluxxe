@@ -55,7 +55,7 @@ function ExperienceInterlude() {
   return (
     <motion.div
       ref={blockRef}
-      className="py-10 md:py-16"
+      className="py-8 md:py-16"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-10%", amount: 0.15 }}
@@ -117,7 +117,7 @@ function ExperienceInterlude() {
 export function Experience() {
   return (
     <section
-      className="overflow-hidden bg-[#162235] px-[var(--gutter-x)] py-[clamp(8rem,15vh,14rem)]"
+      className="overflow-hidden bg-[#162235] px-[var(--gutter-x)] py-20 md:py-[clamp(8rem,15vh,14rem)]"
       aria-label="The experience"
     >
       <motion.div
@@ -131,24 +131,26 @@ export function Experience() {
           <div key={step.n}>
             <motion.div
               variants={fadeInUp}
-              className={`grid grid-cols-1 gap-6 py-14 md:grid-cols-12 md:gap-12 md:py-20 ${
+              // Phones: number in a narrow left rail beside the text, so the
+              // five steps read as one timeline rather than five screens.
+              className={`grid grid-cols-[2.75rem_minmax(0,1fr)] gap-x-4 py-7 md:grid-cols-12 md:gap-12 md:py-20 ${
                 index > 0 ? "border-t border-white/[0.06]" : ""
               }`}
             >
               <div className={`md:col-span-2 ${index % 2 === 1 ? "md:order-last md:text-right" : ""}`}>
                 <span
-                  className="font-[family-name:var(--font-serif)] text-[clamp(3rem,5vw,4.5rem)] font-light italic leading-none"
-                  style={{ color: brand.colors.roseGold, opacity: 0.4 }}
+                  className="font-[family-name:var(--font-serif)] text-2xl font-light italic leading-[1.5] opacity-70 md:text-[clamp(3rem,5vw,4.5rem)] md:leading-none md:opacity-40"
+                  style={{ color: brand.colors.roseGold }}
                 >
                   {step.n}
                 </span>
               </div>
 
               <div className={`md:col-span-7 ${index % 2 === 1 ? "md:order-first" : ""}`}>
-                <h3 className="font-[family-name:var(--font-display)] text-[clamp(2rem,4vw,3rem)] leading-tight tracking-tight text-[#F5F0EB]">
+                <h3 className="font-[family-name:var(--font-display)] text-[1.6rem] leading-tight tracking-tight text-[#F5F0EB] md:text-[clamp(2rem,4vw,3rem)]">
                   {step.title}
                 </h3>
-                <p className="mt-5 max-w-lg font-[family-name:var(--font-body)] text-base font-light leading-relaxed text-[#F5F0EB]/80">
+                <p className="mt-2 max-w-lg font-[family-name:var(--font-body)] text-[15px] font-light leading-relaxed text-[#F5F0EB]/80 md:mt-5 md:text-base">
                   {step.body}
                 </p>
               </div>

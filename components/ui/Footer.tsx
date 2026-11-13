@@ -74,9 +74,10 @@ export function Footer() {
     <footer className="bg-[#162235]">
       <div className="sk-hairline" aria-hidden />
 
-      <div className="mx-auto max-w-[1440px] px-[var(--gutter-x)] pt-20 pb-12 md:pt-24 md:pb-16">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-8">
-          <div className="md:col-span-4">
+      {/* pb-28 on phones keeps the last line clear of the fixed action bar. */}
+      <div className="mx-auto max-w-[1440px] px-[var(--gutter-x)] pt-14 pb-28 md:pt-24 md:pb-16">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-12 md:gap-8">
+          <div className="col-span-2 md:col-span-4">
             <Image
               src={logos.monogramRoseGold}
               alt="Skyluxxe"
@@ -172,10 +173,10 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-            <p className="mb-3 mt-10 font-[family-name:var(--font-body)] text-xs uppercase tracking-[0.16em] text-[#8A9AB5]/60">
+            <p className="mb-3 mt-10 hidden font-[family-name:var(--font-body)] text-xs uppercase tracking-[0.16em] text-[#8A9AB5]/60 md:block">
               Legal
             </p>
-            <ul className="flex flex-col gap-1">
+            <ul className="hidden flex-col gap-1 md:flex">
               {LEGAL_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
@@ -190,7 +191,21 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 border-t border-white/[0.06] pt-8 md:mt-20">
+        {/* Phones: legal links as one wrapping row rather than a third list. */}
+        <ul className="mt-8 flex flex-wrap gap-x-6 md:hidden">
+          {LEGAL_LINKS.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className="inline-flex min-h-[44px] items-center font-[family-name:var(--font-body)] text-xs tracking-[0.04em] text-[#8A9AB5] transition-colors hover:text-[#DFA293]"
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-4 border-t border-white/[0.06] pt-6 md:mt-20 md:pt-8">
           <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
             <p className="font-[family-name:var(--font-body)] text-sm tracking-[0.06em] text-[#8A9AB5]/60">
               {brand.values.join(" · ")}

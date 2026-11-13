@@ -130,7 +130,9 @@ export function GlobalReach() {
         style={{ paddingTop: "clamp(3.5rem, 7vh, 5rem)", paddingBottom: "clamp(3.5rem, 7vh, 5rem)" }}
       >
         <motion.div
-          className="mx-auto grid max-w-4xl grid-cols-1 divide-y divide-white/[0.06] md:max-w-5xl md:grid-cols-3 md:divide-x md:divide-y-0"
+          // Three across at every width: on phones this is one glanceable row
+          // rather than three stacked blocks.
+          className="mx-auto grid max-w-4xl grid-cols-3 divide-x divide-white/[0.06] md:max-w-5xl"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-10%" }}
@@ -139,17 +141,17 @@ export function GlobalReach() {
           {stats.map((stat) => (
             <motion.div
               key={stat.label}
-              className="flex flex-col items-center px-4 py-10 text-center first:pt-0 last:pb-0 md:py-8 md:first:pl-0 md:last:pr-0"
+              className="flex flex-col items-center px-2 py-2 text-center md:px-4 md:py-8 md:first:pl-0 md:last:pr-0"
               variants={fadeInUp}
             >
               <p
-                className="font-[family-name:var(--font-display)] text-4xl tabular-nums sm:text-5xl"
+                className="font-[family-name:var(--font-display)] text-[1.75rem] tabular-nums sm:text-5xl"
                 style={{ color: brand.colors.offWhite }}
               >
                 {stat.value}
               </p>
               <p
-                className="mt-2 font-[family-name:var(--font-body)] text-sm font-light tracking-wide"
+                className="mt-2 font-[family-name:var(--font-body)] text-[11px] font-light leading-snug tracking-wide md:text-sm"
                 style={{ color: brand.colors.mutedBlue }}
               >
                 {stat.label}

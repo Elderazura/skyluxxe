@@ -34,14 +34,14 @@ export function AboutValuesList({ values }: AboutValuesListProps) {
           key={v.title}
           variants={fadeInUp}
           className={[
-            "grid gap-6 border-t py-10 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.35fr)] md:gap-16 md:py-12",
+            "grid gap-2 border-t py-6 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.35fr)] md:gap-16 md:py-12",
             i === values.length - 1 ? "border-b" : "",
           ].join(" ")}
           style={{ borderColor: `${brand.colors.gold}33` }}
         >
           <MaskedText>
             <span
-              className="font-[family-name:var(--font-display)] text-2xl tracking-tight md:text-[1.85rem]"
+              className="font-[family-name:var(--font-display)] text-xl tracking-tight md:text-[1.85rem]"
               style={{ color: brand.colors.navy }}
             >
               {String(i + 1).padStart(2, "0")}
@@ -53,7 +53,7 @@ export function AboutValuesList({ values }: AboutValuesListProps) {
           </MaskedText>
           <MaskedText delay={0.08}>
             <p
-              className="font-[family-name:var(--font-body)] text-base font-light leading-[1.85]"
+              className="font-[family-name:var(--font-body)] text-[15px] font-light leading-relaxed md:text-base md:leading-[1.85]"
               style={{ color: brand.colors.deepNavy }}
             >
               {v.body}

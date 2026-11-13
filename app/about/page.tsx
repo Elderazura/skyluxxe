@@ -216,7 +216,7 @@ export default function AboutPage() {
         </div>
 
         <div className="mx-auto mt-16 max-w-[var(--container-max)] md:mt-24">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-6">
+          <div className="grid grid-cols-2 gap-3 md:gap-6">
             <div className="flex justify-start">
               <RevealImage
                 src={brandImages.candleStationery}

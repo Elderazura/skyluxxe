@@ -6,6 +6,7 @@ import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Cursor } from "@/components/ui/Cursor";
 import { Preloader, PRELOADER_BOOT_SCRIPT } from "@/components/ui/Preloader";
 import { CookieConsent } from "@/components/ui/CookieConsent";
+import { MobileActionBar } from "@/components/ui/MobileActionBar";
 import { SITE_URL, siteSummary } from "@/content/site-discovery";
 import { getSiteJsonLdScript } from "@/lib/json-ld";
 import "./globals.css";
@@ -131,6 +132,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Lets the fixed mobile bar pad itself clear of the home indicator.
+  viewportFit: "cover",
+  themeColor: "#0D1B2A",
 };
 
 export default function RootLayout({
@@ -168,6 +172,7 @@ export default function RootLayout({
           <Navigation />
           <main id="main-content">{children}</main>
           <Footer />
+          <MobileActionBar />
           <CookieConsent />
         </SmoothScroll>
       </body>

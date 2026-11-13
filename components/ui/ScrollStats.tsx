@@ -68,7 +68,7 @@ export function ScrollStats({ items, className }: ScrollStatsProps) {
       whileInView="visible"
       viewport={{ once: true, margin: "-8%", amount: 0.35 }}
     >
-      <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+      <div className="grid grid-cols-3 gap-3 md:gap-8">
         {items.map((item) => (
           <motion.div key={item.id} variants={fadeInUp}>
             <StatCell item={item} staticValue={reduceMotion === true} />
@@ -114,14 +114,14 @@ function StatCell({
   return (
     <div ref={ref} className="text-center">
       <p
-        className="font-[family-name:var(--font-display)] text-4xl tabular-nums md:text-5xl"
+        className="font-[family-name:var(--font-display)] text-[1.75rem] tabular-nums md:text-5xl"
         style={{ color: brand.colors.offWhite }}
       >
         {displayed}
         {item.suffix ?? ""}
       </p>
       <p
-        className="mt-2 font-[family-name:var(--font-body)] text-sm font-light tracking-wide"
+        className="mt-2 font-[family-name:var(--font-body)] text-[11px] font-light leading-snug tracking-wide md:text-sm"
         style={{ color: brand.colors.mutedBlue }}
       >
         {item.label}

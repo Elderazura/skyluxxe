@@ -2,7 +2,7 @@
 
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+import { RAIL_ITEM, RAIL_SCROLLER, RailProgress, useRailProgress } from "@/components/ui/SnapRail";
 
 import { brand } from "@/content/brand";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
@@ -20,14 +20,17 @@ type ReachRegionsProps = {
 };
 
 export function ReachRegions({ regions }: ReachRegionsProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const { ref: railRef, index: railIndex, count: railCount } = useRailProgress<HTMLDivElement>();
+  const ref = railRef;
   const inView = useInView(ref, { once: true, margin: "-6%" });
   const reduceMotion = useReducedMotion();
 
   return (
+    <>
     <motion.div
       ref={ref}
-      className="space-y-20 md:space-y-0"
+      // Phones: one card per region in a swipeable rail.
+      className={`${RAIL_SCROLLER} md:block`}
       variants={staggerContainer}
       initial="hidden"
       animate={reduceMotion || inView ? "visible" : "hidden"}
@@ -41,11 +44,15 @@ export function ReachRegions({ regions }: ReachRegionsProps) {
             key={region.id}
             variants={fadeInUp}
             aria-labelledby={`region-${region.id}`}
-            className={`${isIvoryBand ? "bg-[#FAF7F4] -mx-[var(--gutter-x)] px-[var(--gutter-x)]" : ""}`}
+            className={`${RAIL_ITEM} max-md:overflow-hidden max-md:rounded-sm ${
+              isIvoryBand
+                ? "bg-[#FAF7F4] md:-mx-[var(--gutter-x)] md:px-[var(--gutter-x)]"
+                : "max-md:bg-[#162235]"
+            }`}
           >
             <div
-              className={`grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-0 ${
-                index > 0 && !isIvoryBand ? "border-t border-white/[0.06]" : ""
+              className={`grid grid-cols-1 items-center md:grid-cols-2 md:gap-0 ${
+                index > 0 && !isIvoryBand ? "md:border-t md:border-white/[0.06]" : ""
               }`}
             >
               <div className={`relative ${imageOnRight ? "md:order-last" : "md:order-first"}`}>
@@ -55,21 +62,21 @@ export function ReachRegions({ regions }: ReachRegionsProps) {
                     alt=""
                     fill
                     className="object-cover"
-                    sizes="(max-width: 767px) 100vw, 50vw"
+                    sizes="(max-width: 767px) 80vw, 50vw"
                   />
                 </div>
               </div>
 
-              <div className={`py-12 md:py-20 ${imageOnRight ? "md:pr-16 lg:pr-24" : "md:pl-16 lg:pl-24"}`}>
+              <div className={`px-5 py-6 md:px-0 md:py-20 ${imageOnRight ? "md:pr-16 lg:pr-24" : "md:pl-16 lg:pl-24"}`}>
                 <h3
                   id={`region-${region.id}`}
-                  className="font-[family-name:var(--font-display)] text-[clamp(2rem,4vw,3rem)] tracking-tight"
+                  className="font-[family-name:var(--font-display)] text-2xl tracking-tight md:text-[clamp(2rem,4vw,3rem)]"
                   style={{ color: isIvoryBand ? brand.colors.navy : brand.colors.offWhite }}
                 >
                   {region.name}
                 </h3>
 
-                <div className="mt-8 space-y-6">
+                <div className="mt-4 space-y-4 md:mt-8 md:space-y-6">
                   <div>
                     <p
                       className="font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.16em]"
@@ -114,5 +121,7 @@ export function ReachRegions({ regions }: ReachRegionsProps) {
         );
       })}
     </motion.div>
+    <RailProgress index={railIndex} count={railCount} className="mt-6" />
+    </>
   );
 }

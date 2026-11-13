@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { brand } from "@/content/brand";
 import { useLenis } from "./SmoothScroll";
 
 const LINKS = [
@@ -71,7 +72,7 @@ export function Menu({ isOpen, onClose }: MenuProps) {
             toggle in Navigation.tsx.
           */}
           <nav
-            className="flex flex-1 flex-col items-center justify-center px-[var(--gutter-x)] pt-28 pb-12"
+            className="flex flex-1 flex-col items-center justify-center px-[var(--gutter-x)] pt-28 pb-8"
             aria-label="Site menu"
           >
             <ul className="flex w-full max-w-md flex-col items-stretch text-center">
@@ -86,7 +87,7 @@ export function Menu({ isOpen, onClose }: MenuProps) {
                     <Link
                       href={item.href}
                       onClick={onClose}
-                      className="font-[family-name:var(--font-display)] block py-5 text-3xl tracking-[0.08em] text-[#F5F0EB] transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#DFA293] sm:text-4xl"
+                      className="font-[family-name:var(--font-display)] block py-4 text-3xl tracking-[0.08em] text-[#F5F0EB] transition-colors duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:text-[#DFA293] sm:text-4xl"
                     >
                       {item.label}
                     </Link>
@@ -101,6 +102,29 @@ export function Menu({ isOpen, onClose }: MenuProps) {
               ))}
             </ul>
           </nav>
+
+          <motion.div
+            className="grid grid-cols-2 gap-3 px-[var(--gutter-x)]"
+            style={{ paddingBottom: "calc(2rem + env(safe-area-inset-bottom, 0px))" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
+            <a
+              href={brand.contact.whatsAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-h-[48px] items-center justify-center border border-white/15 font-[family-name:var(--font-body)] text-[11px] uppercase tracking-[0.16em] text-[#F5F0EB] active:border-[#DFA293]"
+            >
+              WhatsApp
+            </a>
+            <a
+              href={`tel:${brand.contact.phoneTel}`}
+              className="flex min-h-[48px] items-center justify-center border border-white/15 font-[family-name:var(--font-body)] text-[11px] uppercase tracking-[0.16em] text-[#F5F0EB] active:border-[#DFA293]"
+            >
+              Call the desk
+            </a>
+          </motion.div>
         </motion.div>
       ) : null}
     </AnimatePresence>

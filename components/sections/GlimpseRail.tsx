@@ -29,12 +29,12 @@ export function GlimpseRail({
 
   return (
     <section
-      className="px-[var(--gutter-x)] py-[clamp(4rem,10vh,7rem)] md:py-[clamp(5rem,12vh,8.5rem)]"
+      className="px-[var(--gutter-x)] py-16 md:py-[clamp(5rem,12vh,8.5rem)]"
       style={{ backgroundColor: bg }}
       aria-labelledby="glimpse-rail-heading"
     >
       <div className="mx-auto max-w-[var(--container-max)]">
-        <div className="mb-12 max-w-2xl md:mb-16">
+        <div className="mb-8 max-w-2xl md:mb-16">
           {kicker && (
             <p
               className="font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.2em]"
@@ -54,20 +54,21 @@ export function GlimpseRail({
           </h2>
         </div>
 
-        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+        {/* Phones: swipeable cards with the next one peeking in. */}
+        <ul className="max-sm:-mx-[var(--gutter-x)] max-sm:flex max-sm:snap-x max-sm:snap-mandatory max-sm:gap-4 max-sm:overflow-x-auto max-sm:scroll-px-[var(--gutter-x)] max-sm:px-[var(--gutter-x)] sk-no-scrollbar sm:grid sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-5">
           {items.map((item) => (
-            <li key={item.href}>
+            <li key={item.href} className="max-sm:w-[76vw] max-sm:shrink-0 max-sm:snap-start">
               <Link
                 href={item.href}
                 className={`group block outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#DFA293] ${ringOffset}`}
               >
-                <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-sm sm:aspect-[4/3]">
                   <Image
                     src={item.imageSrc}
                     alt={item.imageAlt}
                     fill
                     className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
-                    sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
+                    sizes="(max-width: 639px) 76vw, (max-width: 1023px) 50vw, 25vw"
                   />
                   <div
                     className="absolute inset-0 bg-gradient-to-t from-[#0D1B2A]/85 via-[#0D1B2A]/25 to-transparent"

@@ -10,6 +10,7 @@ import { serviceImages } from "@/content/images";
 import { services } from "@/content/services";
 import { DURATION_FAST, EASE_OUT_EXPO, fadeInUp, staggerContainerLoose } from "@/lib/animations";
 import { registerGSAP } from "@/lib/gsap";
+import { RAIL_ITEM, RAIL_SCROLLER, RailProgress, useRailProgress } from "@/components/ui/SnapRail";
 
 /*
  * Stacked cards instead of the pinned horizontal track: on phones, and for
@@ -111,6 +112,101 @@ function DesktopPanel({ service }: { service: (typeof services)[number] }) {
         />
       </div>
     </div>
+  );
+}
+
+/**
+ * The non-pinned layout. Phones get a swipeable rail of portrait cards with a
+ * position indicator — eleven services in one screen instead of eleven stacked
+ * ones. Wide screens only land here under reduced motion, and get a grid.
+ */
+function StackedServices() {
+  const { ref: railRef, index: railIndex, count: railCount } = useRailProgress<HTMLUListElement>();
+
+  return (
+    <motion.div
+      className="px-[var(--gutter-x)] py-20 md:px-0 md:py-0"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: "some" }}
+      variants={staggerContainerLoose}
+    >
+      <motion.div variants={fadeInUp} className="mb-8 flex items-end justify-between gap-6 md:hidden">
+        <div>
+          <p className="font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.2em] text-[#8A9AB5]">
+            Our services
+          </p>
+          <h2
+            className="mt-3 font-[family-name:var(--font-display)] text-[1.9rem] leading-[1.1] tracking-tight"
+            style={{ color: brand.colors.offWhite }}
+          >
+            Eleven disciplines
+          </h2>
+        </div>
+        <Link
+          href="/services"
+          className="inline-flex min-h-[44px] shrink-0 items-center font-[family-name:var(--font-serif)] text-sm italic text-[#DFA293]"
+        >
+          View all <span className="ml-1" aria-hidden>&rarr;</span>
+        </Link>
+      </motion.div>
+
+      <motion.ul
+        ref={railRef}
+        variants={fadeInUp}
+        className={`${RAIL_SCROLLER} list-none md:grid md:grid-cols-2 xl:grid-cols-3`}
+      >
+        {services.map((service) => {
+          const imgSrc = serviceImages[service.slug];
+          return (
+            <li key={service.id} className={RAIL_ITEM}>
+              <Link
+                href={`/services/${service.slug}`}
+                className="group relative flex aspect-[4/5] flex-col justify-end overflow-hidden md:aspect-[4/3]"
+                style={{ backgroundColor: brand.colors.deepNavy }}
+              >
+                {imgSrc && (
+                  <Image
+                    src={imgSrc}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 767px) 80vw, (max-width: 1279px) 50vw, 34vw"
+                  />
+                )}
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(to top, rgba(13,27,42,0.96) 0%, rgba(13,27,42,0.78) 34%, rgba(13,27,42,0.15) 62%, transparent 100%)",
+                  }}
+                  aria-hidden
+                />
+                <span className="absolute top-5 left-5 font-[family-name:var(--font-body)] text-xs uppercase tracking-[0.22em] text-white/80">
+                  {service.romanNumeral}
+                </span>
+                <div className="relative z-10 p-5 md:p-8">
+                  <h3
+                    className="font-[family-name:var(--font-display)] text-[1.6rem] leading-[1.1] tracking-tight md:text-3xl"
+                    style={{ color: brand.colors.offWhite }}
+                  >
+                    {service.name}
+                  </h3>
+                  <p className="mt-3 line-clamp-3 font-[family-name:var(--font-body)] text-sm font-light leading-relaxed text-white/75">
+                    {service.shortDescription}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-2 font-[family-name:var(--font-serif)] text-sm italic text-[#DFA293]">
+                    Discover <span aria-hidden>&rarr;</span>
+                  </span>
+                </div>
+              </Link>
+            </li>
+          );
+        })}
+      </motion.ul>
+
+      <RailProgress index={railIndex} count={railCount} className="mt-6" />
+    </motion.div>
   );
 }
 
@@ -223,85 +319,7 @@ export function ServicesScroll() {
       aria-label="Services"
     >
       {isMobile ? (
-        <motion.div
-          // One column on phones; a grid when this layout is shown on a wide
-          // screen (reduced motion), where full-width cards would be enormous.
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3"
-          initial="hidden"
-          whileInView="visible"
-          // "some", not a fraction: the list is several viewports tall, and on
-          // a short landscape screen 8% of it never fit in view at once.
-          viewport={{ once: true, amount: "some" }}
-          variants={staggerContainerLoose}
-        >
-          {services.map((service) => {
-            const imgSrc = serviceImages[service.slug];
-            return (
-              <motion.div
-                key={service.id}
-                variants={fadeInUp}
-                className="relative overflow-hidden"
-                style={{ backgroundColor: brand.colors.navy }}
-              >
-                {imgSrc && (
-                  <div className="relative aspect-[16/9] w-full overflow-hidden">
-                    <Image
-                      src={imgSrc}
-                      alt=""
-                      fill
-                      className="object-cover sk-m-ken-burns"
-                      sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 34vw"
-                    />
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(to top, rgba(13,27,42,1) 0%, rgba(13,27,42,0.3) 60%, transparent 100%)",
-                      }}
-                    />
-                  </div>
-                )}
-                <div className="relative z-10 px-[var(--gutter-x)] pb-16 pt-6">
-                  <span className="mb-3 block font-[family-name:var(--font-body)] text-xs uppercase tracking-[0.22em] text-[color:var(--color-rose-gold)]">
-                    {service.romanNumeral}
-                  </span>
-                  <h2
-                    className="mb-4 font-[family-name:var(--font-display)] font-normal tracking-tight"
-                    style={{
-                      color: brand.colors.offWhite,
-                      fontSize: "clamp(1.75rem, 6vw, 2.5rem)",
-                    }}
-                  >
-                    {service.name}
-                  </h2>
-                  <p
-                    className="mb-8 max-w-[360px] font-[family-name:var(--font-body)] font-light leading-relaxed"
-                    style={{ color: brand.colors.mutedBlue }}
-                  >
-                    {service.shortDescription}
-                  </p>
-                  <Link
-                    href={`/services/${service.slug}`}
-                    aria-label={`Discover ${service.name}`}
-                    className="group inline-flex min-h-[44px] items-center font-[family-name:var(--font-body)] text-sm font-medium tracking-wide"
-                    style={{ color: brand.colors.offWhite }}
-                  >
-                    <span className="relative pb-1">
-                      Discover
-                      <span
-                        className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 group-hover:scale-x-100"
-                        style={{
-                          backgroundColor: brand.colors.roseGold,
-                          transition: `transform ${DURATION_FAST}s cubic-bezier(${EASE_OUT_EXPO.join(",")})`,
-                        }}
-                      />
-                    </span>
-                  </Link>
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+        <StackedServices />
       ) : (
         <>
           {/*

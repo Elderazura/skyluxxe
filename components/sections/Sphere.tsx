@@ -38,15 +38,11 @@ const categories = [
 export function Sphere() {
   return (
     <section
-      className="bg-[#0D1B2A] px-[var(--gutter-x)]"
-      style={{
-        paddingTop: "clamp(6rem, 12vh, 10rem)",
-        paddingBottom: "clamp(8rem, 15vh, 15rem)",
-      }}
+      className="bg-[#0D1B2A] px-[var(--gutter-x)] pt-16 pb-20 md:pt-[clamp(6rem,12vh,10rem)] md:pb-[clamp(8rem,15vh,15rem)]"
     >
       <div className="mx-auto max-w-[var(--container-max)]">
         <motion.p
-          className="mb-12 font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.2em] text-[#8A9AB5] md:mb-16"
+          className="mb-6 font-[family-name:var(--font-body)] text-xs font-medium uppercase tracking-[0.2em] text-[#8A9AB5] md:mb-16"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-5%" }}
@@ -56,7 +52,9 @@ export function Sphere() {
         </motion.p>
 
         <motion.div
-          className="grid grid-cols-1 gap-4 md:grid-cols-12 md:grid-rows-2 md:gap-4"
+          // Phones: four portrait tiles in a 2×2 grid, one screen instead of
+          // four stacked banners.
+          className="grid grid-cols-2 gap-3 md:grid-cols-12 md:grid-rows-2 md:gap-4"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-8%", amount: 0.12 }}
@@ -106,7 +104,7 @@ function SphereCell({
     >
       <Link
         href={href}
-        className="group relative flex h-full min-h-[18rem] flex-col justify-end overflow-hidden"
+        className="group relative flex aspect-[3/4] flex-col justify-end overflow-hidden md:aspect-auto md:h-full md:min-h-[18rem]"
       >
         {src && (
           <div className="absolute inset-0 overflow-hidden">
@@ -115,7 +113,7 @@ function SphereCell({
               alt=""
               fill
               className="object-cover sk-m-ken-burns transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
-              sizes="(max-width: 767px) 100vw, (max-width: 1200px) 50vw, 40vw"
+              sizes="(max-width: 767px) 50vw, (max-width: 1200px) 50vw, 40vw"
             />
           </div>
         )}
@@ -128,11 +126,11 @@ function SphereCell({
           }}
         />
 
-        <div className="relative z-10 p-8 md:p-10">
-          <span className="block font-[family-name:var(--font-display)] text-[clamp(2.5rem,7vw,4.5rem)] leading-[0.95] tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)]">
+        <div className="relative z-10 p-4 md:p-10">
+          <span className="block font-[family-name:var(--font-display)] text-[1.9rem] leading-[0.95] tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.3)] md:text-[clamp(2.5rem,7vw,4.5rem)]">
             {label}
           </span>
-          <p className="mt-3 max-w-md font-[family-name:var(--font-body)] text-[15px] font-light leading-relaxed text-white/70">
+          <p className="mt-2 max-w-md font-[family-name:var(--font-body)] text-xs font-light leading-snug text-white/75 md:mt-3 md:text-[15px] md:leading-relaxed md:text-white/70">
             {description}
           </p>
         </div>
