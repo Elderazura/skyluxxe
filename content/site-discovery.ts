@@ -76,7 +76,7 @@ export const siteFaqs = [
   },
   {
     question: "Is Skyluxxe a registered business in the UAE?",
-    answer: `Yes. Skyluxxe Concierge Travel is registered in Abu Dhabi (DED licence ${brand.legal.dedLicense}, VAT TRN ${brand.legal.vatTrn}).`,
+    answer: "Yes. Skyluxxe Concierge Travel is a registered company in Abu Dhabi, United Arab Emirates.",
   },
 ] as const;
 
@@ -115,8 +115,6 @@ ${siteSummary}
 - WhatsApp: ${brand.contact.whatsAppUrl}
 - Address: ${brand.contact.addressLine1}
 - Hours: ${brand.office.hoursLine}
-- DED licence: ${brand.legal.dedLicense}
-- VAT TRN: ${brand.legal.vatTrn}
 - Area served: Worldwide (concierge desk in Abu Dhabi)
 
 ## Services

@@ -13,6 +13,7 @@ export function getSiteJsonLdGraph(): Record<string, unknown>[] {
   const sameAs = [
     brand.social.instagram,
     brand.social.linkedin,
+    brand.social.facebook,
     brand.social.x,
     brand.social.pinterest,
   ].filter(Boolean);
@@ -35,14 +36,6 @@ export function getSiteJsonLdGraph(): Record<string, unknown>[] {
       url: SITE_URL,
       email: brand.contact.email,
       telephone: brand.contact.phoneTel,
-      taxID: brand.legal.vatTrn,
-      identifier: [
-        {
-          "@type": "PropertyValue",
-          name: "Abu Dhabi DED Trade Licence",
-          value: brand.legal.dedLicense,
-        },
-      ],
       address: {
         "@type": "PostalAddress",
         streetAddress: "Al Khazna Tower, Najdah Street",

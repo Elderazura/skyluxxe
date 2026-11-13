@@ -25,7 +25,7 @@ export const privacyPolicy = {
     {
       heading: "Service providers",
       body:
-        "We rely on a small number of providers to run this website and handle enquiries: Netlify (website hosting), Resend (delivery of enquiry emails to our desk), Cloudflare Turnstile (protection of the enquiry form against automated abuse), and Google Maps (the optional office map, loaded only when you choose to show it). Each processes only the data needed for its function, under its own terms and privacy policy.",
+        "We rely on a small number of providers to run this website and handle enquiries: Vercel (website hosting), Resend (delivery of enquiry emails to our desk), Cloudflare Turnstile (protection of the enquiry form against automated abuse), and Google Maps (the optional office map, loaded only when you choose to show it). Each processes only the data needed for its function, under its own terms and privacy policy.",
     },
     {
       heading: "Your rights",

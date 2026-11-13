@@ -26,9 +26,10 @@ const LEGAL_LINKS = [
 const SOCIAL = [
   { href: brand.social.instagram, label: "Instagram" },
   { href: brand.social.linkedin, label: "LinkedIn" },
+  { href: brand.social.facebook, label: "Facebook" },
   { href: brand.social.x, label: "X" },
   { href: brand.social.pinterest, label: "Pinterest" },
-] as const;
+].filter((item) => item.href);
 
 function SocialIcon({ label }: { label: string }) {
   const shared = "h-5 w-5 fill-current";
@@ -43,6 +44,12 @@ function SocialIcon({ label }: { label: string }) {
       return (
         <svg className={shared} viewBox="0 0 24 24" aria-hidden>
           <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 8.98h4v12H3v-12zm7 0h3.8v1.64h.05c.53-1 1.84-2.06 3.8-2.06 4.06 0 4.81 2.67 4.81 6.15v6.27h-4v-5.56c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.66H10V8.98z" />
+        </svg>
+      );
+    case "Facebook":
+      return (
+        <svg className={shared} viewBox="0 0 24 24" aria-hidden>
+          <path d="M13.5 22v-8.2h2.76l.41-3.2H13.5V8.56c0-.93.26-1.56 1.59-1.56h1.7V4.14A22.6 22.6 0 0 0 14.31 4c-2.45 0-4.13 1.5-4.13 4.24v2.36H7.4v3.2h2.78V22h3.32z" />
         </svg>
       );
     case "X":
@@ -99,13 +106,6 @@ export function Footer() {
               </a>
               <br />
               {brand.contact.addressLine1}
-            </p>
-            <p className="mt-4 font-[family-name:var(--font-body)] text-xs leading-relaxed text-[#8A9AB5]/70">
-              {brand.legal.entityName}
-              <br />
-              DED licence {brand.legal.dedLicense}
-              <br />
-              VAT TRN {brand.legal.vatTrn}
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">

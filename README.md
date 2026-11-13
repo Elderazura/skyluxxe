@@ -1,7 +1,7 @@
 # Skyluxxe Concierge Travel
 
 Marketing site for Skyluxxe Concierge Travel (skyluxxe.ae). Next.js App Router,
-React 19, Tailwind CSS 4, deployed on Netlify.
+React 19, Tailwind CSS 4, deployed on Vercel.
 
 ## Develop
 

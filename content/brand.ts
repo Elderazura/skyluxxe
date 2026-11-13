@@ -46,11 +46,7 @@ export const brand = {
   },
   legal: {
     entityName: "Skyluxxe Concierge Travel — L.L.C — S.P.C",
-    /** Abu Dhabi DED trade licence (VAT certificate, Dec 2025). */
-    dedLicense: process.env.NEXT_PUBLIC_DED_LICENSE?.trim() || "CN-6236503",
-    dedAuthority: "Abu Dhabi Department of Economic Development",
-    /** UAE VAT Tax Registration Number (FTA certificate, effective 01/01/2026). */
-    vatTrn: process.env.NEXT_PUBLIC_VAT_TRN?.trim() || "105246637000003",
+    /* Trade licence and VAT registration numbers are deliberately not published on the site. */
     registeredAddressLines: [
       "Al Khazna Tower, Najdah Street",
       "Abu Dhabi, United Arab Emirates",
@@ -59,9 +55,15 @@ export const brand = {
   },
   social: {
     instagram: process.env.NEXT_PUBLIC_SOCIAL_INSTAGRAM?.trim() || "https://www.instagram.com/skyluxxeconcierge",
-    linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN?.trim() || "https://www.linkedin.com/company/skyluxxe",
-    x: process.env.NEXT_PUBLIC_SOCIAL_X?.trim() || "https://x.com/skyluxxe",
-    pinterest: process.env.NEXT_PUBLIC_SOCIAL_PINTEREST?.trim() || "https://www.pinterest.com/skyluxxe",
+    linkedin:
+      process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN?.trim() ||
+      "https://www.linkedin.com/company/skyluxxe-conciergetravel/",
+    facebook:
+      process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK?.trim() ||
+      "https://www.facebook.com/share/1BMZct7XZY/",
+    /* No confirmed accounts yet: shown only when a URL is set in the environment. */
+    x: process.env.NEXT_PUBLIC_SOCIAL_X?.trim() || "",
+    pinterest: process.env.NEXT_PUBLIC_SOCIAL_PINTEREST?.trim() || "",
   },
   memberships: {
     headline: "Measured by the company we keep",

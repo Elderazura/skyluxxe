@@ -20,9 +20,8 @@ const hits = new Map<string, number[]>();
 function clientKey(request: Request): string {
   const h = request.headers;
   return (
-    h.get("x-nf-client-connection-ip") ||
-    h.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     h.get("x-real-ip") ||
+    h.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     "unknown"
   );
 }
